@@ -1,0 +1,15 @@
+---
+- name: macOS Dev workstation
+  hosts: macos
+  gather_facts: true
+  vars_files:
+    - ../vars/vars.yml
+  roles:
+    - role: common
+      tags: [common]
+    - role: homebrew
+      tags: [homebrew]
+    - role: dock
+      tags: [dock]
+    - role: dotfiles
+      tags: [dotfiles]

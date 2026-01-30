@@ -1,0 +1,212 @@
+---
+# Single vars file for local macOS bootstrap
+macos_user: "{{ lookup('env', 'USER') }}"
+macos_home: "{{ lookup('env', 'HOME') }}"
+
+# Dock preferences
+dock_autohide: false
+dock_tilesize: 18
+dock_magnification: true
+dock_largesize: 46
+dock_orientation: "bottom"
+dock_show_recents: null
+dock_persistent_apps:
+  - file:///System/Applications/Apps.app/
+  - file:///System/Applications/System%20Settings.app/
+  - file:///Applications/KeePassXC.app/
+  - file:///Applications/Google%20Chrome.app/
+  - file:///Applications/iTerm.app/
+  - file:///Applications/Visual%20Studio%20Code.app/
+
+# Hot corners (0=none, 2=Mission Control, 3=App windows, 4=Desktop,
+# 5=Start screen saver, 6=Disable screen saver, 7=Dashboard,
+# 10=Put display to sleep, 11=Launchpad, 12=Notification Center,
+# 13=Lock screen, 14=Quick Note)
+hotcorner_top_left: 4
+hotcorner_top_left_modifier: 0
+hotcorner_top_right: 3
+hotcorner_top_right_modifier: 0
+hotcorner_bottom_left: 4
+hotcorner_bottom_left_modifier: 0
+hotcorner_bottom_right: 14
+hotcorner_bottom_right_modifier: 0
+
+homebrew_packages:
+  # C++ Common Libraries
+  - abseil
+  # Automate deployment, configuration, and upgrading
+  - ansible
+  # Java build tool
+  - ant
+  # Light UNIX download accelerator
+  - axel
+  # Clone of cat(1) with syntax highlighting and Git integration
+  - bat
+  # Bash scripts that integrate bat with various command-line tools
+  - bat-extras
+  # Powerful, clean, object-oriented scripting language
+  - ruby
+  # Load/unload environment variables based on $PWD
+  - direnv
+  # Run arbitrary commands when files change
+  - entr
+  # Play, record, convert, and stream select audio and video codecs
+  - ffmpeg
+  # Open-source, cross-platform JavaScript runtime environment
+  - node
+  # Command-line fuzzy finder written in Go
+  - fzf
+  # Syntax-highlighting pager for git and diff output
+  - git-delta
+  # GNU implementation of the famous stream editor
+  - gnu-sed
+  # Open source programming language to build simple/reliable/efficient software
+  - go
+  # Kubernetes package manager
+  - helm
+  # Improved top (interactive process viewer)
+  - htop
+  # Calculate various network masks, etc. from a given IP address
+  - ipcalc
+  # Update of iperf: measures TCP, UDP, and SCTP bandwidth
+  - iperf3
+  # Kubernetes command-line interface
+  - kubernetes-cli
+  # Tool that can switch between kubectl contexts easily and create aliases
+  - kubectx
+  # Implementation of the file(1) command
+  - libmagic
+  # Postgres C API library
+  - libpq
+  # List USB devices, just like the Linux lsusb command
+  - lsusb
+  # Mac App Store command-line interface
+  - mas
+  # Deep clean and optimize your Mac
+  - mole
+  # Ambitious Vim-fork focused on extensibility and agility
+  - neovim
+  # Development kit for the Java programming language
+  - openjdk@21
+  # 7-Zip (high compression file archiver) implementation
+  - p7zip
+  # Swiss-army knife of markup format conversion
+  - pandoc
+  # Passphrase entry dialog utilizing the Assuan protocol
+  - pinentry
+  # Execute binaries from Python packages in isolated environments
+  - pipx
+  # Fast, disk space efficient package manager
+  - pnpm
+  # Python version management
+  - pyenv
+  # Generic syntax highlighter
+  - pygments
+  # Tools for and transforming and inspecting PDF files
+  - qpdf
+  # Search tool like grep and The Silver Searcher
+  - ripgrep
+  # Utility that provides fast incremental file transfer
+  - rsync
+  # User interface to the TELNET protocol
+  - telnet
+  # Detect compliance and security violations across Infrastructure as Code
+  - terrascan
+  # Programmatically correct mistyped console commands
+  - thefuck
+  # Simplified and community-driven man pages
+  - tldr
+  # Terminal multiplexer
+  - tmux
+  # TOML for Modern C++
+  - toml11
+  # Vulnerability scanner for container images, file systems, and Git repos
+  - trivy
+  # Tool for creating isolated virtual python environments
+  - virtualenv
+  # Executes a program periodically, showing output fullscreen
+  - watch
+  # Watch files and take action when they change
+  - watchman
+  # Internet file retriever
+  - wget
+  # Process YAML, JSON, XML, CSV and properties documents from the CLI
+  - yq
+  # Fish shell like syntax highlighting for zsh
+  - zsh-syntax-highlighting
+  - gobuffalo/tap/buffalo
+  # The tfswitch command lets you switch between terraform versions.
+  - warrensbox/tap/tfswitch
+homebrew_casks:
+  # Distribution of the Python and R programming languages for scientific computing
+  - anaconda
+  # Utility to dim background/inactive content in the screen
+  - blurred
+  # E-books management software
+  - calibre
+  # Browser for SQLite databases
+  - db-browser-for-sqlite
+  # Universal database tool and SQL client
+  - dbeaver-community
+  # All-in-one toolbox for developers
+  - devutils
+  # Cross-platform Text Expander written in Rust
+  - espanso
+  # Web browser
+  - firefox
+  - font-hack-nerd-font
+  # Menu bar application that displays the CPU speed limit due to thermal issues
+  - hot
+  # HTTP and GraphQL Client
+  - insomnia
+  # Terminal emulator as alternative to Apple's Terminal app
+  - iterm2
+  # App to visualise, validate and format JSON datasets
+  - json-viewer
+  # Password manager app
+  - keepassxc
+  # File archiver
+  - keka
+  # Open-source firewall to block unknown outgoing connections
+  - lulu
+  # Markdown editor
+  - markedit
+  # Visual diff and merge tool
+  - meld
+  # Minimal installer for conda
+  - miniconda
+  # App for launching iOS and Android simulators
+  - minisim
+  # System and utility switches
+  - only-switch
+  # Open source build of Lens Kubernetes IDE
+  - openlens
+  # Utility to uninstall apps and remove leftover files from old/uninstalled apps
+  - pearcleaner
+  # Move and resize windows using keyboard shortcuts or snap areas
+  - rectangle
+  # Menu bar pomodoro timer
+  - tomatobar
+  # Virtual machines UI using QEMU
+  - utm
+  # Open-source code editor
+  - visual-studio-code
+  # Multimedia player
+  - vlc
+  # Open-source version of the X.Org X Window System
+  - xquartz
+  # Utility to hide menu bar items
+  - hiddenbar
+  # Get up and running with large language models locally
+  - ollama-app
+  # Tool to show live information about the batteries in various devices
+  - coconutbattery
+  # Customizable email client
+  - thunderbird
+  # Kubernetes IDE
+  - freelens
+  # Kubernetes and container management on the desktop
+  - rancher
+  # Real time file synchronisation software
+  - syncthing-app
+mas_apps: []

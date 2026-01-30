@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Ansible + ansible-lint
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible ansible-lint
+      - name: Install collections
+        run: ansible-galaxy collection install -r collections/requirements.yml -p collections
+      - name: Run ansible-lint
+        env:
+          ANSIBLE_COLLECTIONS_PATHS: collections
+          ANSIBLE_CONFIG: ansible.cfg
+        run: ansible-lint -p
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+      - name: Install collections
+        run: ansible-galaxy collection install -r collections/requirements.yml -p collections
+      - name: Syntax check
+        env:
+          ANSIBLE_COLLECTIONS_PATHS: collections
+          ANSIBLE_CONFIG: ansible.cfg
+        run: ansible-playbook playbooks/site.yml --syntax-check -e @vars/vars-tests.yml
+
+  integration:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+      - name: Install collections
+        run: ansible-galaxy collection install -r collections/requirements.yml -p collections
+      - name: Prepare tmp
+        run: mkdir -p /tmp/ansible-local
+      - name: Check playbook (homebrew)
+        env:
+          ANSIBLE_COLLECTIONS_PATHS: collections
+          ANSIBLE_CONFIG: ansible.cfg
+        run: ansible-playbook playbooks/site.yml --tags homebrew --check --diff -e @vars/vars-tests.yml
+
+  integration-dock:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+      - name: Install collections
+        run: ansible-galaxy collection install -r collections/requirements.yml -p collections
+      - name: Prepare tmp
+        run: mkdir -p /tmp/ansible-local
+      - name: Check playbook (dock)
+        env:
+          ANSIBLE_COLLECTIONS_PATHS: collections
+          ANSIBLE_CONFIG: ansible.cfg
+        run: ansible-playbook playbooks/site.yml --tags dock --check --diff -e @vars/vars-tests.yml

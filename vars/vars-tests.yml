@@ -1,0 +1,15 @@
+---
+# Single vars file for local macOS bootstrap (small test set)
+macos_user: "{{ lookup('env', 'USER') }}"
+macos_home: "{{ lookup('env', 'HOME') }}"
+
+homebrew_packages:
+  - bat
+  - fzf
+  - ripgrep
+
+homebrew_casks:
+  - iterm2
+  - visual-studio-code
+
+mas_apps: []
