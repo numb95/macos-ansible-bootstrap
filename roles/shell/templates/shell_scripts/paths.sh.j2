@@ -1,0 +1,42 @@
+## Paths
+if [ -d "$HOME/.krew/bin" ]; then
+  export PATH="$PATH:$HOME/.krew/bin"
+fi
+if [ -n "${GOROOT:-}" ] && [ -n "${GOPATH:-}" ] && [ -d "$GOROOT/bin" ] && [ -d "$GOPATH/bin" ]; then
+  export PATH="$PATH:$GOROOT/bin:$GOPATH/bin"
+fi
+if [ -d "$HOME/development/flutter/bin" ]; then
+  export PATH="$HOME/development/flutter/bin:$PATH"
+fi
+if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
+  export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+fi
+if [ -d "/opt/homebrew/opt/openjdk@21/bin" ]; then
+  export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"
+fi
+if [ -n "${ANDROID_HOME:-}" ]; then
+  [ -d "$ANDROID_HOME/platform-tools" ] && export PATH="$ANDROID_HOME/platform-tools:$PATH"
+  [ -d "$ANDROID_HOME/emulator" ] && export PATH="$ANDROID_HOME/emulator:$PATH"
+  [ -d "$ANDROID_HOME/cmdline-tools/latest/bin" ] && export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+fi
+if [ -n "${JAVA_HOME:-}" ] && [ -d "$JAVA_HOME/bin" ]; then
+  export PATH="$JAVA_HOME/bin:$PATH"
+fi
+if [ -d "{{ macos_home }}/bin" ]; then
+  export PATH="$PATH:{{ macos_home }}/bin"
+fi
+if [ -d "{{ macos_home }}/.lmstudio/bin" ]; then
+  export PATH="$PATH:{{ macos_home }}/.lmstudio/bin"
+fi
+if [ -d "{{ macos_home }}/.rd/bin" ]; then
+  export PATH="{{ macos_home }}/.rd/bin:$PATH"
+fi
+if [ -d "{{ macos_home }}/.local/bin" ]; then
+  export PATH="{{ macos_home }}/.local/bin:$PATH"
+fi
+if [ -d "$PWD/bin" ]; then
+  export PATH="$PWD/bin:$PATH"
+fi
+if [ -n "${PYENV_ROOT:-}" ] && [ -d "$PYENV_ROOT/bin" ]; then
+  export PATH="$PYENV_ROOT/bin:$PATH"
+fi

@@ -11,5 +11,7 @@
       tags: [homebrew]
     - role: dock
       tags: [dock]
+    - role: shell
+      tags: [shell]
     - role: dotfiles
       tags: [dotfiles]

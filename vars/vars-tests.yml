@@ -13,3 +13,8 @@ homebrew_casks:
   - visual-studio-code
 
 mas_apps: []
+zsh_custom_plugins:
+  - name: zsh-syntax-highlighting
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+zsh_plugins:
+  - git

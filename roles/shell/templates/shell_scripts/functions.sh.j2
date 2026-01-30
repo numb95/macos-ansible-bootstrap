@@ -1,0 +1,58 @@
+## Output helpers
+print_error() {
+  echo -e "\e[31m❌ $1\e[0m"
+}
+print_huge_info() {
+  echo -e "\e[1;33mℹ️  ${1}\e[0m"
+}
+print_info() {
+  echo -e "\e[94m🔍 $1\e[0m"
+}
+print_success() {
+  echo -e "\e[32m✅ $1\e[0m"
+}
+print_warning() {
+  echo -e "\e[33m⚠️ $1\e[0m"
+}
+
+## PDF tools
+allpdfinfo() {
+  for f in *.pdf; do
+    pdfinfo "$f" | grep Pages | tr -d 'Pages:'
+  done | paste -s -d+ - | bc
+}
+cpdf() {
+  gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="$1" "${@:2}"
+}
+pdf2fax() {
+  gs -q -dNOPAUSE -dBATCH -sDEVICE=tiffg4 -sPAPERSIZE=a4 -sOutputFile=${2} ${1}
+}
+
+## Zsh helpers
+function zsh_directory_name() {
+  emulate -L zsh
+  [[ $1 == d ]] || return
+  while [[ $2 != / ]]; do
+    if [[ -e $2/.git ]]; then
+      typeset -ga reply=(${2:t} $#2)
+      return
+    fi
+    2=${2:h}
+  done
+  return 1
+}
+
+## Utilities
+function help() {
+  "$@" --help 2>&1 | bathelp
+}
+function ia-save() {
+  curl -s -I https://web.archive.org/save/$* | grep Content-Location | awk '{print "https://web.archive.org"$2}'
+}
+
+{% if enable_gcp %}
+## Cloud
+function gswitch() {
+  gcloud config set project "$1" --quiet &> /dev/null && gcloud config get-value project
+}
+{% endif %}

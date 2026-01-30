@@ -1,0 +1,6 @@
+{% if enable_gcp %}
+## Google Cloud SDK (local)
+if [ -f "{{ macos_home }}/google-cloud-sdk/path.zsh.inc" ]; then
+  . "{{ macos_home }}/google-cloud-sdk/path.zsh.inc"
+fi
+{% endif %}

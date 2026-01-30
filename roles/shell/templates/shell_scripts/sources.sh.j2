@@ -1,0 +1,39 @@
+## pyenv
+if command -v pyenv >/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+  eval "$(pyenv init - zsh)"
+  if command -v pyenv-virtualenv-init >/dev/null 2>&1; then
+    eval "$(pyenv virtualenv-init -)"
+  fi
+fi
+
+## thefuck
+if command -v thefuck >/dev/null 2>&1; then
+  eval "$(thefuck --alias)"
+fi
+
+## fzf
+if [ -f "$HOME/.fzf.zsh" ]; then
+  source "$HOME/.fzf.zsh"
+fi
+if fzf --help 2>/dev/null | grep -q -- "--zsh"; then
+  source <(fzf --zsh)
+fi
+
+## completions
+autoload -Uz compinit
+if [ "$(date +'%j')" != "$(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null)" ]; then
+  compinit
+else
+  compinit -C
+fi
+zstyle ":completion:*" use-cache on
+zstyle ":completion:*" cache-path ~/.zsh/cache
+
+## integrations
+if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then
+  source "$HOME/.iterm2_shell_integration.zsh"
+fi
+if [ -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+  source "$HOME/.sdkman/bin/sdkman-init.sh"
+fi

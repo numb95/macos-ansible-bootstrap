@@ -3,6 +3,46 @@
 macos_user: "{{ lookup('env', 'USER') }}"
 macos_home: "{{ lookup('env', 'HOME') }}"
 
+# Shell
+omz_path: "{{ macos_home }}/.oh-my-zsh"
+p10k_path: "{{ macos_home }}/.oh-my-zsh/custom/themes/powerlevel10k"
+zshrc_path: "{{ macos_home }}/.zshrc"
+p10k_config_path: "{{ macos_home }}/.p10k.zsh"
+shell_scripts_dir: "{{ macos_home }}/.shell_scripts"
+enable_gcp: true
+enable_aws: false
+backup_base_dir: "{{ macos_home }}/backup/shell"
+backup_dir: "{{ backup_base_dir }}/{{ ansible_facts['date_time']['iso8601_basic_short'] }}"
+zsh_plugins:
+  # - git
+  # - kubectl
+  # - kubectx
+  # - alias-tips
+  # - thefuck
+  # - terraform
+  # - ssh-agent
+  # - golang
+  # - helm
+  # - gitignore
+  # - command-not-found
+  # - extract
+  # - alias-finder
+  # - common-aliases
+  # - copyfile
+  # - copybuffer
+  # - copypath
+  - aliases
+  # - rsync
+  # - zsh-autosuggestions
+  # - zsh-syntax-highlighting
+zsh_custom_plugins:
+  - name: zsh-syntax-highlighting
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+  - name: zsh-autosuggestions
+    repo: https://github.com/zsh-users/zsh-autosuggestions.git
+  - name: alias-tips
+    repo: https://github.com/djui/alias-tips.git
+
 # Dock preferences
 dock_autohide: false
 dock_tilesize: 18

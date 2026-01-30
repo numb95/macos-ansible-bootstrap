@@ -1,0 +1,50 @@
+if command -v go >/dev/null 2>&1; then
+  export GOPATH="$HOME/go"
+fi
+if [ -d "$HOME/.pyenv" ] || command -v pyenv >/dev/null 2>&1; then
+  export PYENV_ROOT="$HOME/.pyenv"
+fi
+
+## SDKs and tools
+if [ -d "$HOME/.sdkman" ] || command -v sdk >/dev/null 2>&1; then
+  export SDKMAN_DIR="$HOME/.sdkman"
+fi
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+
+## Java
+if [ "$(uname -s)" = "Darwin" ] && command -v /usr/libexec/java_home >/dev/null 2>&1; then
+  export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+fi
+
+## PNPM
+if command -v pnpm >/dev/null 2>&1 || [ -d "$HOME/Library/pnpm" ]; then
+  export PNPM_HOME="$HOME/Library/pnpm"
+  case ":$PATH:" in
+    *":$PNPM_HOME:"*) ;;
+    *) export PATH="$PNPM_HOME:$PATH" ;;
+  esac
+fi
+
+## FZF
+export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target --preview 'bat -n --color=always {}' --bind 'ctrl-/:change-preview-window(down|hidden|)' --color header:italic --header 'Press CTRL-Y to copy command into clipboard'"
+if [ "$(uname -s)" = "Darwin" ]; then
+  export FZF_CTRL_T_OPTS="$FZF_CTRL_T_OPTS --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'"
+fi
+export FZF_CTRL_R_OPTS=""
+export FZF_ALT_C_OPTS="--walker-skip .git,node_modules,target --preview 'tree -C {}'"
+
+## zsh-autosuggestions
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#663399,italic,standout"
+
+## Locale
+LANG="en_US.UTF-8"
+LC_COLLATE="en_US.UTF-8"
+LC_CTYPE="en_US.UTF-8"
+LC_MESSAGES="en_US.UTF-8"
+LC_MONETARY="en_US.UTF-8"
+LC_NUMERIC="en_US.UTF-8"
+LC_TIME="en_US.UTF-8"
+LC_ALL=
+
+## Misc
+export USE_GKE_GCLOUD_AUTH_PLUGIN=False

@@ -1,0 +1,144 @@
+---
+- name: Backup shell config
+  ansible.builtin.file:
+    path: "{{ backup_dir }}"
+    state: directory
+    mode: "0700"
+  tags:
+    - shell
+
+- name: Check .zshrc
+  ansible.builtin.stat:
+    path: "{{ zshrc_path }}"
+  register: zshrc_stat
+  tags:
+    - shell
+
+- name: Backup .zshrc
+  ansible.builtin.copy:
+    src: "{{ zshrc_path }}"
+    dest: "{{ backup_dir }}/.zshrc"
+    remote_src: true
+    mode: "0600"
+  when: zshrc_stat.stat.exists
+  tags:
+    - shell
+
+- name: Check Powerlevel10k configs
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  loop:
+    - "{{ macos_home }}/.p10k.zsh"
+    - "{{ macos_home }}/.p10k.zsh.zwc"
+  register: p10k_stats
+  tags:
+    - shell
+
+- name: Backup Powerlevel10k configs
+  ansible.builtin.copy:
+    src: "{{ item.stat.path }}"
+    dest: "{{ backup_dir }}/"
+    remote_src: true
+    mode: "0600"
+  loop: "{{ p10k_stats.results | selectattr('stat.exists', 'equalto', True) | list }}"
+  tags:
+    - shell
+
+- name: Check shell scripts directory
+  ansible.builtin.stat:
+    path: "{{ shell_scripts_dir }}"
+  register: shell_scripts_stat
+  tags:
+    - shell
+
+- name: Backup shell scripts directory
+  ansible.builtin.copy:
+    src: "{{ shell_scripts_dir }}"
+    dest: "{{ backup_dir }}/.shell_scripts"
+    remote_src: true
+    mode: "0700"
+  when: shell_scripts_stat.stat.exists
+  tags:
+    - shell
+
+- name: Ensure oh-my-zsh is installed
+  ansible.builtin.git:
+    repo: "https://github.com/ohmyzsh/ohmyzsh.git"
+    dest: "{{ omz_path }}"
+    version: master
+    depth: 1
+  tags:
+    - shell
+
+- name: Ensure powerlevel10k is installed
+  ansible.builtin.git:
+    repo: "https://github.com/romkatv/powerlevel10k.git"
+    dest: "{{ p10k_path }}"
+    version: master
+    depth: 1
+  tags:
+    - shell
+
+- name: Check custom plugin directories
+  ansible.builtin.stat:
+    path: "{{ omz_path }}/custom/plugins/{{ item.name }}"
+  loop: "{{ zsh_custom_plugins }}"
+  register: zsh_plugin_stats
+  when: zsh_custom_plugins | length > 0
+  tags:
+    - shell
+
+- name: Install custom oh-my-zsh plugins (only if missing)
+  ansible.builtin.git:
+    repo: "{{ item.item.repo }}"
+    dest: "{{ omz_path }}/custom/plugins/{{ item.item.name }}"
+    version: master
+    depth: 1
+  loop: "{{ zsh_plugin_stats.results }}"
+  when:
+    - zsh_custom_plugins | length > 0
+    - not item.stat.exists
+  tags:
+    - shell
+
+
+- name: Install .zshrc from template
+  ansible.builtin.template:
+    src: zshrc.j2
+    dest: "{{ zshrc_path }}"
+    mode: "0644"
+  tags:
+    - shell
+
+- name: Install powerlevel10k config from template
+  ansible.builtin.copy:
+    src: p10k.zsh
+    dest: "{{ p10k_config_path }}"
+    mode: "0644"
+  tags:
+    - shell
+
+- name: Ensure shell scripts directory exists
+  ansible.builtin.file:
+    path: "{{ shell_scripts_dir }}"
+    state: directory
+    mode: "0755"
+  tags:
+    - shell
+
+- name: Install shell script fragments
+  ansible.builtin.template:
+    src: "shell_scripts/{{ item }}.sh.j2"
+    dest: "{{ shell_scripts_dir }}/{{ item }}.sh"
+    mode: "0644"
+  loop:
+    - p10k
+    - omz
+    - paths
+    - exports
+    - sources
+    - functions
+    - alias
+    - private
+  tags:
+    - shell

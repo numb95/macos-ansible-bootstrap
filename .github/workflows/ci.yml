@@ -84,3 +84,10 @@ jobs:
           ANSIBLE_COLLECTIONS_PATH: collections
           ANSIBLE_CONFIG: ansible.cfg
         run: ansible-playbook playbooks/site.yml --tags dock --check --diff -e @vars/vars-tests.yml
+
+  shell-container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run shell container test
+        run: scripts/test-shell.sh
