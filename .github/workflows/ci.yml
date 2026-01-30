@@ -20,9 +20,9 @@ jobs:
         run: ansible-galaxy collection install -r collections/requirements.yml -p collections
       - name: Run ansible-lint
         env:
-          ANSIBLE_COLLECTIONS_PATHS: collections
+          ANSIBLE_COLLECTIONS_PATH: collections
           ANSIBLE_CONFIG: ansible.cfg
-        run: ansible-lint -p
+        run: ansible-lint --format=pep8
 
   tests:
     runs-on: ubuntu-latest
@@ -39,7 +39,7 @@ jobs:
         run: ansible-galaxy collection install -r collections/requirements.yml -p collections
       - name: Syntax check
         env:
-          ANSIBLE_COLLECTIONS_PATHS: collections
+          ANSIBLE_COLLECTIONS_PATH: collections
           ANSIBLE_CONFIG: ansible.cfg
         run: ansible-playbook playbooks/site.yml --syntax-check -e @vars/vars-tests.yml
 
@@ -60,7 +60,7 @@ jobs:
         run: mkdir -p /tmp/ansible-local
       - name: Check playbook (homebrew)
         env:
-          ANSIBLE_COLLECTIONS_PATHS: collections
+          ANSIBLE_COLLECTIONS_PATH: collections
           ANSIBLE_CONFIG: ansible.cfg
         run: ansible-playbook playbooks/site.yml --tags homebrew --check --diff -e @vars/vars-tests.yml
 
@@ -81,6 +81,6 @@ jobs:
         run: mkdir -p /tmp/ansible-local
       - name: Check playbook (dock)
         env:
-          ANSIBLE_COLLECTIONS_PATHS: collections
+          ANSIBLE_COLLECTIONS_PATH: collections
           ANSIBLE_CONFIG: ansible.cfg
         run: ansible-playbook playbooks/site.yml --tags dock --check --diff -e @vars/vars-tests.yml
