@@ -1,5 +1,5 @@
 ---
-- name: macOS Dev workstation
+- name: MacOS Dev Workstation
   hosts: macos
   gather_facts: true
   vars_files:

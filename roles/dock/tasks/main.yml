@@ -1,72 +1,128 @@
 ---
 - name: Set Dock autohide
-  ansible.builtin.command: defaults write com.apple.dock autohide -bool {{ dock_autohide | bool }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: autohide
+    type: bool
+    value: "{{ dock_autohide | bool }}"
   tags:
     - dock
 
 - name: Set Dock tile size
-  ansible.builtin.command: defaults write com.apple.dock tilesize -int {{ dock_tilesize }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: tilesize
+    type: int
+    value: "{{ dock_tilesize }}"
   tags:
     - dock
 
 - name: Set Dock magnification
-  ansible.builtin.command: defaults write com.apple.dock magnification -bool {{ dock_magnification | bool }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: magnification
+    type: bool
+    value: "{{ dock_magnification | bool }}"
   tags:
     - dock
 
 - name: Set Dock magnification size
-  ansible.builtin.command: defaults write com.apple.dock largesize -int {{ dock_largesize }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: largesize
+    type: int
+    value: "{{ dock_largesize }}"
   tags:
     - dock
 
 - name: Set Dock position
-  ansible.builtin.command: defaults write com.apple.dock orientation -string {{ dock_orientation }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: orientation
+    type: string
+    value: "{{ dock_orientation }}"
   tags:
     - dock
 
 - name: Set Dock show recent apps
-  ansible.builtin.command: defaults write com.apple.dock show-recents -bool {{ dock_show_recents | bool }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: show-recents
+    type: bool
+    value: "{{ dock_show_recents | bool }}"
   when: dock_show_recents is not none
   tags:
     - dock
 
 - name: Set hot corner top left
-  ansible.builtin.command: defaults write com.apple.dock wvous-tl-corner -int {{ hotcorner_top_left }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: wvous-tl-corner
+    type: int
+    value: "{{ hotcorner_top_left }}"
   tags:
     - dock
 
 - name: Set hot corner top left modifier
-  ansible.builtin.command: defaults write com.apple.dock wvous-tl-modifier -int {{ hotcorner_top_left_modifier }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: wvous-tl-modifier
+    type: int
+    value: "{{ hotcorner_top_left_modifier }}"
   tags:
     - dock
 
 - name: Set hot corner top right
-  ansible.builtin.command: defaults write com.apple.dock wvous-tr-corner -int {{ hotcorner_top_right }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: wvous-tr-corner
+    type: int
+    value: "{{ hotcorner_top_right }}"
   tags:
     - dock
 
 - name: Set hot corner top right modifier
-  ansible.builtin.command: defaults write com.apple.dock wvous-tr-modifier -int {{ hotcorner_top_right_modifier }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: wvous-tr-modifier
+    type: int
+    value: "{{ hotcorner_top_right_modifier }}"
   tags:
     - dock
 
 - name: Set hot corner bottom left
-  ansible.builtin.command: defaults write com.apple.dock wvous-bl-corner -int {{ hotcorner_bottom_left }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: wvous-bl-corner
+    type: int
+    value: "{{ hotcorner_bottom_left }}"
   tags:
     - dock
 
 - name: Set hot corner bottom left modifier
-  ansible.builtin.command: defaults write com.apple.dock wvous-bl-modifier -int {{ hotcorner_bottom_left_modifier }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: wvous-bl-modifier
+    type: int
+    value: "{{ hotcorner_bottom_left_modifier }}"
   tags:
     - dock
 
 - name: Set hot corner bottom right
-  ansible.builtin.command: defaults write com.apple.dock wvous-br-corner -int {{ hotcorner_bottom_right }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: wvous-br-corner
+    type: int
+    value: "{{ hotcorner_bottom_right }}"
   tags:
     - dock
 
 - name: Set hot corner bottom right modifier
-  ansible.builtin.command: defaults write com.apple.dock wvous-br-modifier -int {{ hotcorner_bottom_right_modifier }}
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: wvous-br-modifier
+    type: int
+    value: "{{ hotcorner_bottom_right_modifier }}"
   tags:
     - dock
 
@@ -81,6 +137,7 @@
 - name: Apply Dock pinned apps
   ansible.builtin.command: python3 {{ playbook_dir }}/../scripts/apply_dock_apps.py /tmp/dock_apps.json
   when: dock_persistent_apps | length > 0
+  changed_when: false
   tags:
     - dock
 

@@ -22,7 +22,7 @@ dock_persistent_apps:
 # 5=Start screen saver, 6=Disable screen saver, 7=Dashboard,
 # 10=Put display to sleep, 11=Launchpad, 12=Notification Center,
 # 13=Lock screen, 14=Quick Note)
-hotcorner_top_left: 4
+hotcorner_top_left: 3
 hotcorner_top_left_modifier: 0
 hotcorner_top_right: 3
 hotcorner_top_right_modifier: 0
