@@ -10,7 +10,7 @@
 - name: Check .zshrc
   ansible.builtin.stat:
     path: "{{ zshrc_path }}"
-  register: zshrc_stat
+  register: shell_zshrc_stat
   tags:
     - shell
 
@@ -20,7 +20,7 @@
     dest: "{{ backup_dir }}/.zshrc"
     remote_src: true
     mode: "0600"
-  when: zshrc_stat.stat.exists
+  when: shell_zshrc_stat.stat.exists
   tags:
     - shell
 
@@ -30,7 +30,7 @@
   loop:
     - "{{ macos_home }}/.p10k.zsh"
     - "{{ macos_home }}/.p10k.zsh.zwc"
-  register: p10k_stats
+  register: shell_p10k_stats
   tags:
     - shell
 
@@ -40,7 +40,7 @@
     dest: "{{ backup_dir }}/"
     remote_src: true
     mode: "0600"
-  loop: "{{ p10k_stats.results | selectattr('stat.exists', 'equalto', True) | list }}"
+  loop: "{{ shell_p10k_stats.results | selectattr('stat.exists', 'equalto', True) | list }}"
   tags:
     - shell
 
@@ -83,7 +83,7 @@
   ansible.builtin.stat:
     path: "{{ omz_path }}/custom/plugins/{{ item.name }}"
   loop: "{{ zsh_custom_plugins }}"
-  register: zsh_plugin_stats
+  register: shell_zsh_plugin_stats
   when: zsh_custom_plugins | length > 0
   tags:
     - shell
@@ -94,7 +94,7 @@
     dest: "{{ omz_path }}/custom/plugins/{{ item.item.name }}"
     version: master
     depth: 1
-  loop: "{{ zsh_plugin_stats.results }}"
+  loop: "{{ shell_zsh_plugin_stats.results }}"
   when:
     - zsh_custom_plugins | length > 0
     - not item.stat.exists
