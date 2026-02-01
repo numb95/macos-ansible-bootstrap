@@ -12,3 +12,4 @@ if [ -n "$WEATHER" ]; then
 else
     echo "Failed to fetch weather data for ${CITY}."
 fi
+# End of script
