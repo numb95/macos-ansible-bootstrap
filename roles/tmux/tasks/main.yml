@@ -44,7 +44,7 @@
 - name: Check .tmuxp directory
   ansible.builtin.stat:
     path: "{{ macos_home }}/.tmuxp"
-  register: tmuxp_dir_stat
+  register: tmux_tmuxp_dir_stat
   tags:
     - tmux
 
@@ -54,7 +54,7 @@
     dest: "{{ tmux_backup_dir }}/.tmuxp"
     remote_src: true
     mode: "0700"
-  when: tmuxp_dir_stat.stat.exists
+  when: tmux_tmuxp_dir_stat.stat.exists
   tags:
     - tmux
 
