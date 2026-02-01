@@ -1,0 +1,87 @@
+# tmux configuration
+
+# Plugins (TPM-managed)
+## Active
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-cpu'
+set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+set -g @plugin 'tmux-plugins/tmux-online-status'
+set -g @plugin 'xamut/tmux-network-bandwidth'
+set -g @plugin 'charlietag/tmux-split-statusbar'
+set -g @plugin 'dracula/tmux'
+set -g @plugin 'sainnhe/tmux-fzf'
+
+
+# Core UI / behavior
+## Active
+set -g pane-border-status top
+set -g pane-border-format '#P: #(pwd="#{pane_current_path}"; echo "${pwd/$HOME/~}")'
+set-option -g status-interval 5
+set-option -g automatic-rename on
+set-option -g automatic-rename-format '#{b:pane_current_path}'
+## Optional
+#set -g pane-border-format '#P: #{pane_current_command} #(pwd="#{pane_current_path}"; echo ${pwd####*/})#F'
+#set-window-option -g window-status-current-format '#[fg=white,bold]** #{window_index} #[fg=green]#{pane_current_command} #[fg=blue]#(echo "#{pane_current_path}" | rev | cut -d'/' -f-3 | rev) #[fg=white]**|'
+#set-window-option -g window-status-format '#[fg=white,bold]#{window_index} #[fg=green]#{pane_current_command} #[fg=blue]#(echo "#{pane_current_path}" | rev | cut -d'/' -f-3 | rev) #[fg=white]|'
+#set-option -g mouse on
+#set-option -g mouse-resize-pane on
+# select-pane -T '#(pwd="#{pane_current_path}"; echo ${pwd####*/})'
+
+# Status bar
+## Active
+set -g @split-statusbar-mode 'on'
+## Optional
+#set -g @split-status-hide-bindkey 'H'
+#set -g @split-statusbar-bindkey 'S'
+
+# Theme: Dracula
+## Active
+set -g @dracula-plugins "battery cpu-usage ram-usage network-ping network network-bandwidth custom:wttr.sh"
+set -g @dracula-cpu-usage-colors "red dark_gray"
+set -g @dracula-border-contrast true
+set -g @dracula-battery-label "󰁹 "
+set -g @dracula-cpu-usage-label "󰻠"
+set -g @dracula-network-ethernet-label "󰈀 Eth"
+set -g @dracula-network-offline-label "󱍢"
+set -g @dracula-network-wifi-label " "
+set -g @dracula-ram-usage-label "󰍛"
+set -g @dracula-network-bandwidth-label "󱘖"
+set -g @dracula-custom-plugin-colors "orange dark_gray"
+set -g @dracula-show-empty-plugins true
+set -g @dracula-ram-usage-colors "green dark_gray"
+set -g @dracula-show-powerline true
+set -g @dracula-network-colors "white dark_gray"
+set -g @dracula-show-flags true
+set -g @dracula-show-left-icon " You shall not pass!"
+set -g @dracula-battery-colors "yellow dark_gray"
+set -g @dracula-border-contrast truex
+set -g @dracula-show-fahrenheit false
+set -g @dracula-network-bandwidth-interval 0
+set -g @dracula-network-bandwidth-show-interface true
+## Optional
+#set-option -g status 2
+#set -ag status-format[1] '#[align=right]Bottom right'
+#set -g @dracula-gpu-power-label "󰢮 "
+#set -g @dracula-gpu-usage-label "󰢮 "
+#set -g @dracula-gpu-vram-label "󰢮 "
+#set -g @dracula-fixed-location "Berlin"
+#set -g @dracula-show-location false
+# set -g @dracula-fixed-location "Europe/berlin"
+# set -g @dracula-ping-server "google.com"
+# set -g @dracula-ping-rate 5
+# set -g @dracula-network-bandwidth en0
+
+# Restore/session behavior
+## Active
+set -g @continuum-restore 'on'
+
+# Key bindings
+## Active
+# Toggle htop window with Ctrl-b H
+bind-key H run-shell "if tmux list-windows -F '#W' | grep -q '^htop$'; then tmux kill-window -t htop; else tmux new-window -n htop 'htop'; fi"
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run '~/.tmux/plugins/tpm/tpm'

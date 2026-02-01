@@ -13,5 +13,7 @@
       tags: [dock]
     - role: shell
       tags: [shell]
+    - role: tmux
+      tags: [tmux]
     - role: dotfiles
       tags: [dotfiles]

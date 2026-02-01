@@ -1,0 +1,139 @@
+---
+- name: Ensure tmux backup directory exists
+  ansible.builtin.file:
+    path: "{{ tmux_backup_dir }}"
+    state: directory
+    mode: "0700"
+  tags:
+    - tmux
+
+- name: Check .tmux.conf
+  ansible.builtin.stat:
+    path: "{{ macos_home }}/.tmux.conf"
+  register: tmux_conf_stat
+  tags:
+    - tmux
+
+- name: Backup .tmux.conf
+  ansible.builtin.copy:
+    src: "{{ macos_home }}/.tmux.conf"
+    dest: "{{ tmux_backup_dir }}/.tmux.conf"
+    remote_src: true
+    mode: "0600"
+  when: tmux_conf_stat.stat.exists
+  tags:
+    - tmux
+
+- name: Check .tmux directory
+  ansible.builtin.stat:
+    path: "{{ macos_home }}/.tmux"
+  register: tmux_dir_stat
+  tags:
+    - tmux
+
+- name: Backup .tmux directory
+  ansible.builtin.copy:
+    src: "{{ macos_home }}/.tmux"
+    dest: "{{ tmux_backup_dir }}/.tmux"
+    remote_src: true
+    mode: "0700"
+  when: tmux_dir_stat.stat.exists
+  tags:
+    - tmux
+
+- name: Check .tmuxp directory
+  ansible.builtin.stat:
+    path: "{{ macos_home }}/.tmuxp"
+  register: tmux_tmuxp_dir_stat
+  tags:
+    - tmux
+
+- name: Backup .tmuxp directory
+  ansible.builtin.copy:
+    src: "{{ macos_home }}/.tmuxp"
+    dest: "{{ tmux_backup_dir }}/.tmuxp"
+    remote_src: true
+    mode: "0700"
+  when: tmux_tmuxp_dir_stat.stat.exists
+  tags:
+    - tmux
+
+- name: Ensure tmux config directory exists
+  ansible.builtin.file:
+    path: "{{ macos_home }}/.tmux"
+    state: directory
+    mode: "0755"
+  tags:
+    - tmux
+
+- name: Ensure tmux plugins directory exists
+  ansible.builtin.file:
+    path: "{{ macos_home }}/.tmux/plugins"
+    state: directory
+    mode: "0755"
+  tags:
+    - tmux
+
+- name: Install .tmux.conf from template
+  ansible.builtin.template:
+    src: tmux.conf.j2
+    dest: "{{ macos_home }}/.tmux.conf"
+    mode: "0644"
+  tags:
+    - tmux
+
+- name: Install tmux plugin manager (tpm)
+  ansible.builtin.git:
+    repo: "https://github.com/tmux-plugins/tpm"
+    dest: "{{ macos_home }}/.tmux/plugins/tpm"
+    version: master
+    depth: 1
+  tags:
+    - tmux
+
+- name: Ensure tmux server is running
+  ansible.builtin.command: tmux start-server
+  changed_when: false
+  tags:
+    - tmux
+
+- name: Ensure tmux session exists for plugin install
+  ansible.builtin.command: tmux new-session -d -s tpm-install
+  changed_when: false
+  failed_when: false
+  tags:
+    - tmux
+
+- name: Load tmux config for plugin install
+  ansible.builtin.command: tmux source-file "{{ macos_home }}/.tmux.conf"
+  changed_when: false
+  tags:
+    - tmux
+
+- name: Install tmux plugins via tpm
+  ansible.builtin.command: tmux run-shell "{{ macos_home }}/.tmux/plugins/tpm/bin/install_plugins"
+  changed_when: false
+  tags:
+    - tmux
+
+- name: Update tmux plugins via tpm
+  ansible.builtin.command: tmux run-shell "{{ macos_home }}/.tmux/plugins/tpm/bin/update_plugins all"
+  changed_when: false
+  tags:
+    - tmux
+
+- name: Ensure Dracula script directory exists
+  ansible.builtin.file:
+    path: "{{ macos_home }}/.tmux/plugins/tmux/scripts"
+    state: directory
+    mode: "0755"
+  tags:
+    - tmux
+
+- name: Install Dracula weather script
+  ansible.builtin.copy:
+    src: wttr.sh
+    dest: "{{ macos_home }}/.tmux/plugins/tmux/scripts/wttr.sh"
+    mode: "0755"
+  tags:
+    - tmux
