@@ -2,6 +2,20 @@
 # Single vars file for local macOS bootstrap (small test set)
 macos_user: "{{ lookup('env', 'USER') }}"
 macos_home: "{{ lookup('env', 'HOME') }}"
+enable_sdkman: false
+enable_goenv: false
+enable_nvm: false
+enable_pyenv: false
+enable_rvm: false
+enable_tfenv: false
+enable_tfswitch: false
+enable_fvm: false
+goenv_root: "{{ macos_home }}/.goenv"
+pyenv_root: "{{ macos_home }}/.pyenv"
+tfenv_root: "{{ macos_home }}/.tfenv"
+nvm_dir: "{{ macos_home }}/.nvm"
+rvm_path: "{{ macos_home }}/.rvm"
+sdkman_dir: "{{ macos_home }}/.sdkman"
 tmux_backup_base_dir: "{{ macos_home }}/backup/tmux"
 tmux_backup_dir: "{{ tmux_backup_base_dir }}/{{ ansible_facts['date_time']['iso8601_basic_short'] }}"
 

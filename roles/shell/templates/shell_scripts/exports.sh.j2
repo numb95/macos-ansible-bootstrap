@@ -1,20 +1,39 @@
 if command -v go >/dev/null 2>&1; then
   export GOPATH="$HOME/go"
 fi
-if [ -d "$HOME/.pyenv" ] || command -v pyenv >/dev/null 2>&1; then
-  export PYENV_ROOT="$HOME/.pyenv"
+{% if enable_pyenv %}
+if [ -d "{{ pyenv_root }}" ] || command -v pyenv >/dev/null 2>&1; then
+  export PYENV_ROOT="{{ pyenv_root }}"
 fi
+{% endif %}
+{% if enable_goenv %}
+if [ -d "{{ goenv_root }}" ] || command -v goenv >/dev/null 2>&1; then
+  export GOENV_ROOT="{{ goenv_root }}"
+fi
+{% endif %}
+{% if enable_tfenv %}
+if [ -d "{{ tfenv_root }}" ] || command -v tfenv >/dev/null 2>&1; then
+  export TFENV_ROOT="{{ tfenv_root }}"
+fi
+{% endif %}
+{% if enable_nvm %}
+if [ -d "{{ nvm_dir }}" ] || command -v nvm >/dev/null 2>&1; then
+  export NVM_DIR="{{ nvm_dir }}"
+fi
+{% endif %}
+{% if enable_rvm %}
+if [ -d "{{ rvm_path }}" ] || command -v rvm >/dev/null 2>&1; then
+  export RVM_PATH="{{ rvm_path }}"
+fi
+{% endif %}
 
 ## SDKs and tools
-if [ -d "$HOME/.sdkman" ] || command -v sdk >/dev/null 2>&1; then
-  export SDKMAN_DIR="$HOME/.sdkman"
+{% if enable_sdkman %}
+if [ -d "{{ sdkman_dir }}" ] || command -v sdk >/dev/null 2>&1; then
+  export SDKMAN_DIR="{{ sdkman_dir }}"
 fi
+{% endif %}
 export ANDROID_HOME="$HOME/Library/Android/sdk"
-
-## Java
-if [ "$(uname -s)" = "Darwin" ] && command -v /usr/libexec/java_home >/dev/null 2>&1; then
-  export JAVA_HOME=$(/usr/libexec/java_home -v 17)
-fi
 
 ## PNPM
 if command -v pnpm >/dev/null 2>&1 || [ -d "$HOME/Library/pnpm" ]; then

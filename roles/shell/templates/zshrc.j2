@@ -4,6 +4,6 @@ SHELL_SCRIPTS_DIR="{{ shell_scripts_dir }}"
 [[ -f "${SHELL_SCRIPTS_DIR}/omz.sh" ]] && source "${SHELL_SCRIPTS_DIR}/omz.sh"
 source "{{ omz_path }}/oh-my-zsh.sh"
 [[ -f "{{ p10k_config_path }}" ]] && source "{{ p10k_config_path }}"
-for f in paths exports sources functions alias private; do
+for f in exports paths sources functions alias private; do
   [[ -f "${SHELL_SCRIPTS_DIR}/${f}.sh" ]] && source "${SHELL_SCRIPTS_DIR}/${f}.sh"
 done

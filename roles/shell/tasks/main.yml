@@ -102,6 +102,146 @@
     - shell
 
 
+- name: Download SDKMAN installer
+  ansible.builtin.get_url:
+    url: https://get.sdkman.io
+    dest: /tmp/sdkman-install.sh
+    mode: "0755"
+  when: enable_sdkman
+  tags:
+    - shell
+
+- name: Ensure SDKMAN is installed
+  ansible.builtin.command: /tmp/sdkman-install.sh
+  args:
+    creates: "{{ sdkman_dir }}/bin/sdkman-init.sh"
+  when: enable_sdkman
+  changed_when: false
+  tags:
+    - shell
+
+- name: Check pyenv directory
+  ansible.builtin.stat:
+    path: "{{ pyenv_root }}"
+  register: shell_pyenv_stat
+  tags:
+    - shell
+
+- name: Ensure pyenv is installed
+  ansible.builtin.git:
+    repo: "https://github.com/pyenv/pyenv.git"
+    dest: "{{ pyenv_root }}"
+    version: master
+    depth: 1
+  when:
+    - enable_pyenv
+    - not shell_pyenv_stat.stat.exists
+  tags:
+    - shell
+
+- name: Check goenv directory
+  ansible.builtin.stat:
+    path: "{{ goenv_root }}"
+  register: shell_goenv_stat
+  tags:
+    - shell
+
+- name: Ensure goenv is installed
+  ansible.builtin.git:
+    repo: "https://github.com/go-nv/goenv.git"
+    dest: "{{ goenv_root }}"
+    version: master
+    depth: 1
+  when:
+    - enable_goenv
+    - not shell_goenv_stat.stat.exists
+  tags:
+    - shell
+
+- name: Download nvm installer
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh
+    dest: /tmp/nvm-install.sh
+    mode: "0755"
+  when: enable_nvm
+  tags:
+    - shell
+
+- name: Ensure nvm is installed
+  ansible.builtin.command: /tmp/nvm-install.sh
+  args:
+    creates: "{{ nvm_dir }}/nvm.sh"
+  when: enable_nvm
+  changed_when: false
+  tags:
+    - shell
+
+- name: Download rvm installer
+  ansible.builtin.get_url:
+    url: https://get.rvm.io
+    dest: /tmp/rvm-install.sh
+    mode: "0755"
+  when: enable_rvm
+  tags:
+    - shell
+
+- name: Ensure rvm is installed
+  ansible.builtin.command: /tmp/rvm-install.sh stable
+  args:
+    creates: "{{ rvm_path }}/scripts/rvm"
+  when: enable_rvm
+  changed_when: false
+  tags:
+    - shell
+
+- name: Check tfenv directory
+  ansible.builtin.stat:
+    path: "{{ tfenv_root }}"
+  register: shell_tfenv_stat
+  tags:
+    - shell
+
+- name: Ensure tfenv is installed
+  ansible.builtin.git:
+    repo: "https://github.com/tfutils/tfenv.git"
+    dest: "{{ tfenv_root }}"
+    version: master
+    depth: 1
+  when:
+    - enable_tfenv
+    - not shell_tfenv_stat.stat.exists
+  tags:
+    - shell
+
+- name: Check Homebrew for env managers
+  ansible.builtin.command: /usr/bin/which brew
+  register: shell_brew_check
+  changed_when: false
+  failed_when: false
+  when: enable_tfswitch or enable_fvm
+  tags:
+    - shell
+
+- name: Ensure tfswitch is installed (Homebrew)
+  ansible.builtin.command: brew install warrensbox/tap/tfswitch
+  when:
+    - enable_tfswitch
+    - shell_brew_check.rc == 0
+  changed_when: false
+  tags:
+    - shell
+
+- name: Ensure fvm is installed (Homebrew)
+  ansible.builtin.shell: |
+    brew tap leoafarias/fvm
+    brew install fvm
+  when:
+    - enable_fvm
+    - shell_brew_check.rc == 0
+  changed_when: false
+  tags:
+    - shell
+
 - name: Install .zshrc from template
   ansible.builtin.template:
     src: zshrc.j2
