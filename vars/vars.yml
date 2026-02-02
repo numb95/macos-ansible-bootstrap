@@ -11,6 +11,20 @@ p10k_config_path: "{{ macos_home }}/.p10k.zsh"
 shell_scripts_dir: "{{ macos_home }}/.shell_scripts"
 enable_gcp: true
 enable_aws: false
+enable_sdkman: false
+enable_goenv: false
+enable_nvm: false
+enable_pyenv: false
+enable_rvm: false
+enable_tfenv: true
+enable_tfswitch: true
+enable_fvm: false
+goenv_root: "{{ macos_home }}/.goenv"
+pyenv_root: "{{ macos_home }}/.pyenv"
+tfenv_root: "{{ macos_home }}/.tfenv"
+nvm_dir: "{{ macos_home }}/.nvm"
+rvm_path: "{{ macos_home }}/.rvm"
+sdkman_dir: "{{ macos_home }}/.sdkman"
 backup_base_dir: "{{ macos_home }}/backup/shell"
 backup_dir: "{{ backup_base_dir }}/{{ ansible_facts['date_time']['iso8601_basic_short'] }}"
 tmux_backup_base_dir: "{{ macos_home }}/backup/tmux"
@@ -141,7 +155,6 @@ homebrew_packages:
   # Fast, disk space efficient package manager
   - pnpm
   # Python version management
-  - pyenv
   # Generic syntax highlighter
   - pygments
   # Tools for and transforming and inspecting PDF files
@@ -177,8 +190,7 @@ homebrew_packages:
   # Fish shell like syntax highlighting for zsh
   - zsh-syntax-highlighting
   - gobuffalo/tap/buffalo
-  # The tfswitch command lets you switch between terraform versions.
-  - warrensbox/tap/tfswitch
+  - awscli
 homebrew_casks:
   # Distribution of the Python and R programming languages for scientific computing
   - anaconda

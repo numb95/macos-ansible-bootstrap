@@ -37,6 +37,18 @@ fi
 if [ -d "$PWD/bin" ]; then
   export PATH="$PWD/bin:$PATH"
 fi
+{% if enable_pyenv %}
 if [ -n "${PYENV_ROOT:-}" ] && [ -d "$PYENV_ROOT/bin" ]; then
   export PATH="$PYENV_ROOT/bin:$PATH"
 fi
+{% endif %}
+{% if enable_goenv %}
+if [ -n "${GOENV_ROOT:-}" ] && [ -d "$GOENV_ROOT/bin" ]; then
+  export PATH="$GOENV_ROOT/bin:$PATH"
+fi
+{% endif %}
+{% if enable_tfenv %}
+if [ -n "${TFENV_ROOT:-}" ] && [ -d "$TFENV_ROOT/bin" ]; then
+  export PATH="$TFENV_ROOT/bin:$PATH"
+fi
+{% endif %}
