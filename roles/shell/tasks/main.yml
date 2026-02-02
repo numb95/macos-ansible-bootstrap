@@ -102,11 +102,21 @@
     - shell
 
 
+- name: Download SDKMAN installer
+  ansible.builtin.get_url:
+    url: https://get.sdkman.io
+    dest: /tmp/sdkman-install.sh
+    mode: "0755"
+  when: enable_sdkman
+  tags:
+    - shell
+
 - name: Ensure SDKMAN is installed
-  ansible.builtin.shell: curl -s "https://get.sdkman.io" | bash
+  ansible.builtin.command: /tmp/sdkman-install.sh
   args:
     creates: "{{ sdkman_dir }}/bin/sdkman-init.sh"
   when: enable_sdkman
+  changed_when: false
   tags:
     - shell
 
@@ -148,19 +158,39 @@
   tags:
     - shell
 
-- name: Ensure nvm is installed
-  ansible.builtin.shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
-  args:
-    creates: "{{ nvm_dir }}/nvm.sh"
+- name: Download nvm installer
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh
+    dest: /tmp/nvm-install.sh
+    mode: "0755"
   when: enable_nvm
   tags:
     - shell
 
+- name: Ensure nvm is installed
+  ansible.builtin.command: /tmp/nvm-install.sh
+  args:
+    creates: "{{ nvm_dir }}/nvm.sh"
+  when: enable_nvm
+  changed_when: false
+  tags:
+    - shell
+
+- name: Download rvm installer
+  ansible.builtin.get_url:
+    url: https://get.rvm.io
+    dest: /tmp/rvm-install.sh
+    mode: "0755"
+  when: enable_rvm
+  tags:
+    - shell
+
 - name: Ensure rvm is installed
-  ansible.builtin.shell: curl -sSL https://get.rvm.io | bash -s stable
+  ansible.builtin.command: /tmp/rvm-install.sh stable
   args:
     creates: "{{ rvm_path }}/scripts/rvm"
   when: enable_rvm
+  changed_when: false
   tags:
     - shell
 
@@ -197,6 +227,7 @@
   when:
     - enable_tfswitch
     - shell_brew_check.rc == 0
+  changed_when: false
   tags:
     - shell
 
@@ -207,6 +238,7 @@
   when:
     - enable_fvm
     - shell_brew_check.rc == 0
+  changed_when: false
   tags:
     - shell
 
