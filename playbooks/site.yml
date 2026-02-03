@@ -15,5 +15,7 @@
       tags: [shell]
     - role: tmux
       tags: [tmux]
+    - role: update
+      tags: [update]
     - role: dotfiles
       tags: [dotfiles]
