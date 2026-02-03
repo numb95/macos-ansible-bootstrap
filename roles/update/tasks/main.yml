@@ -1,0 +1,222 @@
+---
+- name: Check Homebrew
+  ansible.builtin.command: /usr/bin/which brew
+  register: update_brew_check
+  changed_when: false
+  failed_when: false
+  tags:
+    - update
+
+- name: Update Homebrew
+  ansible.builtin.command: brew update
+  when: update_brew_check.rc == 0
+  changed_when: false
+  tags:
+    - update
+
+- name: Upgrade Homebrew packages
+  ansible.builtin.command: brew upgrade
+  when: update_brew_check.rc == 0
+  changed_when: false
+  tags:
+    - update
+
+- name: Upgrade Homebrew casks
+  ansible.builtin.command: brew upgrade --cask
+  when: update_brew_check.rc == 0
+  changed_when: false
+  failed_when: false
+  tags:
+    - update
+
+- name: Update oh-my-zsh
+  ansible.builtin.git:
+    repo: https://github.com/ohmyzsh/ohmyzsh.git
+    dest: "{{ omz_path }}"
+    version: master
+    update: true
+  tags:
+    - update
+
+- name: Update powerlevel10k
+  ansible.builtin.git:
+    repo: https://github.com/romkatv/powerlevel10k.git
+    dest: "{{ p10k_path }}"
+    version: master
+    update: true
+  tags:
+    - update
+
+- name: Update custom oh-my-zsh plugins
+  ansible.builtin.git:
+    repo: "{{ item.repo }}"
+    dest: "{{ omz_path }}/custom/plugins/{{ item.name }}"
+    version: master
+    update: true
+  loop: "{{ zsh_custom_plugins }}"
+  when: zsh_custom_plugins | length > 0
+  tags:
+    - update
+
+- name: Check pyenv directory
+  ansible.builtin.stat:
+    path: "{{ pyenv_root }}"
+  register: update_pyenv_stat
+  tags:
+    - update
+
+- name: Update pyenv
+  ansible.builtin.git:
+    repo: https://github.com/pyenv/pyenv.git
+    dest: "{{ pyenv_root }}"
+    version: master
+    update: true
+  when:
+    - enable_pyenv
+    - update_pyenv_stat.stat.exists
+  tags:
+    - update
+
+- name: Check goenv directory
+  ansible.builtin.stat:
+    path: "{{ goenv_root }}"
+  register: update_goenv_stat
+  tags:
+    - update
+
+- name: Update goenv
+  ansible.builtin.git:
+    repo: https://github.com/go-nv/goenv.git
+    dest: "{{ goenv_root }}"
+    version: master
+    update: true
+  when:
+    - enable_goenv
+    - update_goenv_stat.stat.exists
+  tags:
+    - update
+
+- name: Check tfenv directory
+  ansible.builtin.stat:
+    path: "{{ tfenv_root }}"
+  register: update_tfenv_stat
+  tags:
+    - update
+
+- name: Update tfenv
+  ansible.builtin.git:
+    repo: https://github.com/tfutils/tfenv.git
+    dest: "{{ tfenv_root }}"
+    version: master
+    update: true
+  when:
+    - enable_tfenv
+    - update_tfenv_stat.stat.exists
+  tags:
+    - update
+
+- name: Check nvm directory
+  ansible.builtin.stat:
+    path: "{{ nvm_dir }}"
+  register: update_nvm_stat
+  tags:
+    - update
+
+- name: Update nvm
+  ansible.builtin.git:
+    repo: https://github.com/nvm-sh/nvm.git
+    dest: "{{ nvm_dir }}"
+    version: master
+    update: true
+  when:
+    - enable_nvm
+    - update_nvm_stat.stat.exists
+  tags:
+    - update
+
+- name: Check SDKMAN directory
+  ansible.builtin.stat:
+    path: "{{ sdkman_dir }}/bin/sdkman-init.sh"
+  register: update_sdkman_stat
+  tags:
+    - update
+
+- name: Update SDKMAN
+  ansible.builtin.shell: |
+    source "{{ sdkman_dir }}/bin/sdkman-init.sh"
+    sdk selfupdate
+    sdk update
+  args:
+    executable: /bin/bash
+  when:
+    - enable_sdkman
+    - update_sdkman_stat.stat.exists
+  changed_when: false
+  tags:
+    - update
+
+- name: Check rvm directory
+  ansible.builtin.stat:
+    path: "{{ rvm_path }}/scripts/rvm"
+  register: update_rvm_stat
+  tags:
+    - update
+
+- name: Update rvm
+  ansible.builtin.shell: |
+    source "{{ rvm_path }}/scripts/rvm"
+    rvm get stable
+  args:
+    executable: /bin/bash
+  when:
+    - enable_rvm
+    - update_rvm_stat.stat.exists
+  changed_when: false
+  tags:
+    - update
+
+- name: Check tmux availability
+  ansible.builtin.command: tmux -V
+  register: update_tmux_check
+  changed_when: false
+  failed_when: false
+  tags:
+    - update
+
+- name: Ensure tmux server is running
+  ansible.builtin.command: tmux start-server
+  changed_when: false
+  when: update_tmux_check.rc == 0
+  tags:
+    - update
+
+- name: Ensure tmux session exists for plugin update
+  ansible.builtin.command: tmux new-session -d -s tpm-update
+  changed_when: false
+  failed_when: false
+  when: update_tmux_check.rc == 0
+  tags:
+    - update
+
+- name: Load tmux config for plugin update
+  ansible.builtin.command: tmux source-file "{{ macos_home }}/.tmux.conf"
+  changed_when: false
+  when: update_tmux_check.rc == 0
+  tags:
+    - update
+
+- name: Check tpm install
+  ansible.builtin.stat:
+    path: "{{ macos_home }}/.tmux/plugins/tpm/bin/update_plugins"
+  register: update_tpm_stat
+  tags:
+    - update
+
+- name: Update tmux plugins via tpm
+  ansible.builtin.command: tmux run-shell "{{ macos_home }}/.tmux/plugins/tpm/bin/update_plugins all"
+  changed_when: false
+  when:
+    - update_tmux_check.rc == 0
+    - update_tpm_stat.stat.exists
+  tags:
+    - update
