@@ -191,6 +191,7 @@ homebrew_packages:
   - zsh-syntax-highlighting
   - gobuffalo/tap/buffalo
   - awscli
+  - gh
 homebrew_casks:
   # Distribution of the Python and R programming languages for scientific computing
   - anaconda
