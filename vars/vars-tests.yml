@@ -10,12 +10,17 @@ enable_rvm: false
 enable_tfenv: false
 enable_tfswitch: false
 enable_fvm: false
+enable_tooling: false
 goenv_root: "{{ macos_home }}/.goenv"
 pyenv_root: "{{ macos_home }}/.pyenv"
 tfenv_root: "{{ macos_home }}/.tfenv"
 nvm_dir: "{{ macos_home }}/.nvm"
 rvm_path: "{{ macos_home }}/.rvm"
 sdkman_dir: "{{ macos_home }}/.sdkman"
+pip_packages: []
+go_packages: []
+gem_packages: []
+npm_global_packages: []
 tmux_backup_base_dir: "{{ macos_home }}/backup/tmux"
 tmux_backup_dir: "{{ tmux_backup_base_dir }}/{{ ansible_facts['date_time']['iso8601_basic_short'] }}"
 

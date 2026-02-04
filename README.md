@@ -121,6 +121,15 @@ What it installs/configures:
 - Dracula custom weather script at `~/.tmux/plugins/tmux/scripts/wttr.sh`
 - plugin install/update via TPM (runs inside tmux)
 
+## Tooling role details
+
+What it installs/configures (when `enable_tooling: true`):
+- Runtime dependencies via Homebrew: `node`, `python`, `go`, `ruby`
+- npm global packages from `npm_global_packages`
+- pip user packages from `pip_packages`
+- Go tools from `go_packages`
+- Ruby gems from `gem_packages`
+
 ## Homebrew role details
 
 What it installs/configures:
@@ -154,6 +163,7 @@ Updates:
   - SDKMAN: `sdk selfupdate` + `sdk update`
   - rvm: `rvm get stable`
 - tmux plugins: TPM `update_plugins all`
+- tooling packages: npm globals, pip user packages, Go tools, and Ruby gems
 
 ## Env managers
 
