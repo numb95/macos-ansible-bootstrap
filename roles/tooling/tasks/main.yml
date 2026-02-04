@@ -1,0 +1,88 @@
+---
+- name: Check Homebrew
+  ansible.builtin.command: /usr/bin/which brew
+  register: tooling_brew_check
+  changed_when: false
+  failed_when: false
+  tags:
+    - tooling
+
+- name: Ensure Node.js is installed (Homebrew)
+  community.general.homebrew:
+    name: node
+    state: present
+  when:
+    - enable_tooling
+    - tooling_brew_check.rc == 0
+  tags:
+    - tooling
+
+- name: Ensure Python is installed (Homebrew)
+  community.general.homebrew:
+    name: python
+    state: present
+  when:
+    - enable_tooling
+    - tooling_brew_check.rc == 0
+  tags:
+    - tooling
+
+- name: Ensure Go is installed (Homebrew)
+  community.general.homebrew:
+    name: go
+    state: present
+  when:
+    - enable_tooling
+    - tooling_brew_check.rc == 0
+  tags:
+    - tooling
+
+- name: Ensure Ruby is installed (Homebrew)
+  community.general.homebrew:
+    name: ruby
+    state: present
+  when:
+    - enable_tooling
+    - tooling_brew_check.rc == 0
+  tags:
+    - tooling
+
+- name: Install npm global packages
+  ansible.builtin.command: npm install -g {{ item }}
+  loop: "{{ npm_global_packages }}"
+  when:
+    - enable_tooling
+    - npm_global_packages | length > 0
+  changed_when: false
+  tags:
+    - tooling
+
+- name: Install pip packages
+  ansible.builtin.command: python3 -m pip install --user {{ item }}
+  loop: "{{ pip_packages }}"
+  when:
+    - enable_tooling
+    - pip_packages | length > 0
+  changed_when: false
+  tags:
+    - tooling
+
+- name: Install Go packages
+  ansible.builtin.command: go install {{ item }}
+  loop: "{{ go_packages }}"
+  when:
+    - enable_tooling
+    - go_packages | length > 0
+  changed_when: false
+  tags:
+    - tooling
+
+- name: Install Ruby gems
+  ansible.builtin.command: gem install {{ item }}
+  loop: "{{ gem_packages }}"
+  when:
+    - enable_tooling
+    - gem_packages | length > 0
+  changed_when: false
+  tags:
+    - tooling

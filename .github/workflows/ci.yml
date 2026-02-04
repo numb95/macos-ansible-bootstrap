@@ -16,6 +16,7 @@ jobs:
       global: ${{ steps.filter.outputs.global }}
       shell: ${{ steps.filter.outputs.shell }}
       tmux: ${{ steps.filter.outputs.tmux }}
+      tooling: ${{ steps.filter.outputs.tooling }}
       homebrew: ${{ steps.filter.outputs.homebrew }}
       dock: ${{ steps.filter.outputs.dock }}
     steps:
@@ -51,6 +52,9 @@ jobs:
               - 'roles/tmux/**'
               - 'scripts/test-tmux.sh'
               - 'docker/Dockerfile.tmux'
+            tooling:
+              - 'roles/tooling/**'
+              - 'vars/**'
             homebrew:
               - 'roles/homebrew/**'
             dock:

@@ -220,3 +220,35 @@
     - update_tpm_stat.stat.exists
   tags:
     - update
+
+- name: Upgrade npm global packages
+  ansible.builtin.command: npm update -g {{ item }}
+  loop: "{{ npm_global_packages }}"
+  when: npm_global_packages | length > 0
+  changed_when: false
+  tags:
+    - update
+
+- name: Upgrade pip user packages
+  ansible.builtin.command: python3 -m pip install --user --upgrade {{ item }}
+  loop: "{{ pip_packages }}"
+  when: pip_packages | length > 0
+  changed_when: false
+  tags:
+    - update
+
+- name: Upgrade Go tools
+  ansible.builtin.command: go install {{ item }}
+  loop: "{{ go_packages }}"
+  when: go_packages | length > 0
+  changed_when: false
+  tags:
+    - update
+
+- name: Upgrade Ruby gems
+  ansible.builtin.command: gem update {{ item }}
+  loop: "{{ gem_packages }}"
+  when: gem_packages | length > 0
+  changed_when: false
+  tags:
+    - update

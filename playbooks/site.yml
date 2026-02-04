@@ -17,5 +17,7 @@
       tags: [tmux]
     - role: update
       tags: [update]
+    - role: tooling
+      tags: [tooling]
     - role: dotfiles
       tags: [dotfiles]

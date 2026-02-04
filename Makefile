@@ -29,5 +29,9 @@ run-tmux:
 run-update:
 	ansible-playbook $(PLAYBOOK) --tags update -e @$(VARS)
 
+run-tooling:
+	ansible-playbook $(PLAYBOOK) --tags tooling -e @$(VARS)
+
+
 deps:
 	ansible-galaxy collection install -r $(COLLECTIONS_REQ) -p collections
