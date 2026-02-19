@@ -49,6 +49,7 @@ make run-dock
 make run-shell
 make run-tmux
 make run-update
+make run-tooling
 ```
 
 ## Inventory
@@ -71,7 +72,7 @@ These lists drive the `homebrew` role installs.
 ## Playbook
 
 - `playbooks/site.yml`: full run
-- Tags: `homebrew`, `dock`, `shell`, `tmux`, `iterm`, `zettlr`, `update`
+- Tags: `homebrew`, `dock`, `shell`, `tmux`, `iterm`, `zettlr`, `update`, `tooling`
 
 Examples:
 
@@ -99,6 +100,9 @@ ansible-playbook playbooks/site.yml --tags zettlr -e restore=true
 # Update only (brew, env managers, oh-my-zsh, tmux plugins)
 ansible-playbook playbooks/site.yml --tags update
 
+# Install packages 
+ansible-playbook playbooks/site.yml --tags tooling
+
 # Backup runs automatically before `shell`
 ```
 
@@ -109,9 +113,19 @@ Backups:
 - `~/.p10k.zsh` and `~/.p10k.zsh.zwc`
 - `~/.shell_scripts`
 
+Shell path/backup vars (all configurable in `vars/vars.yml`):
+- `macos_user`, `macos_home`
+- `omz_path`, `p10k_path`, `zshrc_path`, `p10k_config_path`, `shell_scripts_dir`
+- `backup_base_dir`, `backup_dir`
+
+Shell feature toggles:
+- `enable_gcp` (GCP helper functions + optional SDK sourcing)
+- `enable_aws` (AWS helper aliases)
+
 What it installs/configures:
 - oh-my-zsh and powerlevel10k
 - custom oh-my-zsh plugins from `zsh_custom_plugins`
+- built-in oh-my-zsh plugins from `zsh_plugins`
 - `~/.zshrc` template and Powerlevel10k config
 - shell script fragments under `~/.shell_scripts`
 - env managers (per `enable_*` flags)
@@ -128,6 +142,9 @@ Backups:
 - `~/.tmux`
 - `~/.tmuxp`
 
+Tmux backup vars (configurable in `vars/vars.yml`):
+- `tmux_backup_base_dir`, `tmux_backup_dir`
+
 What it installs/configures:
 - `~/.tmux.conf` from template
 - TPM in `~/.tmux/plugins/tpm`
@@ -140,6 +157,12 @@ Config paths:
 - `~/Library/Application Support/iTerm2`
 - `~/Library/Preferences/com.googlecode.iterm2.plist`
 
+Configurable vars (in `roles/iterm/defaults/main.yml`):
+- `iterm_prefs_path`
+- `iterm_backup_base_dir`, `iterm_backup_dir`
+- `iterm_config_src`, `iterm_prefs_src` (relative to `roles/iterm/files/`)
+- `iterm_restart_after_restore`
+
 Backup behavior:
 - Dated backup at `~/backup/iterm/<timestamp>/`
 - Role template backup at `roles/iterm/files/iTerm2/` and `roles/iterm/files/com.googlecode.iterm2.plist`
@@ -151,6 +174,13 @@ Restore behavior:
 
 Config directory:
 - `~/Library/Application Support/Zettlr`
+
+Configurable vars (in `roles/zettlr/defaults/main.yml`):
+- `zettlr_config_dir`
+- `zettlr_backup_base_dir`, `zettlr_backup_dir`
+- `zettlr_config_src` (relative to `roles/zettlr/files/`)
+- `zettlr_restore_prefs`, `zettlr_prefs_path`, `zettlr_prefs_src`
+- `zettlr_config_items`
 
 Backups (only these items):
 - `stats.json`
@@ -192,6 +222,11 @@ What it installs/configures:
 - Dock autohide, size, magnification, position, and recents
 - Hot corners and Dock persistent apps (from `vars/vars.yml`)
 
+Relevant vars (in `vars/vars.yml`):
+- `dock_autohide`, `dock_tilesize`, `dock_magnification`, `dock_largesize`, `dock_orientation`, `dock_show_recents`, `dock_persistent_apps`
+- `hotcorner_top_left`, `hotcorner_top_left_modifier`, `hotcorner_top_right`, `hotcorner_top_right_modifier`
+- `hotcorner_bottom_left`, `hotcorner_bottom_left_modifier`, `hotcorner_bottom_right`, `hotcorner_bottom_right_modifier`
+
 ## Update role details
 
 Updates:
@@ -231,6 +266,28 @@ sdkman_dir
 ```
 
 Shell init is only injected when the corresponding `enable_*` flag is true.
+
+## Variables reference
+
+All vars can be set in `vars/vars.yml`. Role defaults for iTerm and Zettlr live in their `defaults/main.yml` and can be overridden in `vars/vars.yml`.
+
+| Area | Variables | Purpose |
+| --- | --- | --- |
+| General | `macos_user`, `macos_home` | Base user/home used throughout roles for path construction. |
+| Shell paths and backups | `omz_path`, `p10k_path`, `zshrc_path`, `p10k_config_path`, `shell_scripts_dir`, `backup_base_dir`, `backup_dir` | Control where shell config is installed and where shell backups are stored. |
+| Shell features and plugins | `enable_gcp`, `enable_aws`, `zsh_plugins`, `zsh_custom_plugins` | Toggle cloud helper snippets and manage oh-my-zsh plugin lists. |
+| Env manager toggles | `enable_sdkman`, `enable_goenv`, `enable_pyenv`, `enable_tfenv`, `enable_nvm`, `enable_rvm`, `enable_tfswitch`, `enable_fvm` | Enable/disable manager installs and shell init wiring. |
+| Env manager paths | `goenv_root`, `pyenv_root`, `tfenv_root`, `nvm_dir`, `rvm_path`, `sdkman_dir` | Customize install locations for env managers. |
+| Tooling packages | `npm_global_packages`, `pip_packages`, `go_packages`, `gem_packages` | Define packages to install via each tooling ecosystem. |
+| Dock and Hot Corners | `dock_autohide`, `dock_tilesize`, `dock_magnification`, `dock_largesize`, `dock_orientation`, `dock_show_recents`, `dock_persistent_apps`, `hotcorner_top_left`, `hotcorner_top_left_modifier`, `hotcorner_top_right`, `hotcorner_top_right_modifier`, `hotcorner_bottom_left`, `hotcorner_bottom_left_modifier`, `hotcorner_bottom_right`, `hotcorner_bottom_right_modifier` | Configure Dock appearance/behavior, persistent apps, and Hot Corner actions. |
+| Homebrew and MAS | `homebrew_packages`, `homebrew_casks`, `mas_apps` | Define Homebrew packages/casks and Mac App Store apps (currently unused). |
+| Tmux backups | `tmux_backup_base_dir`, `tmux_backup_dir` | Control tmux backup destination paths. |
+| iTerm defaults | `iterm_prefs_path`, `iterm_backup_base_dir`, `iterm_backup_dir`, `iterm_config_src`, `iterm_prefs_src`, `iterm_restart_after_restore` | Configure iTerm backup/restore paths and optional restart behavior. |
+| Zettlr defaults | `zettlr_config_dir`, `zettlr_backup_base_dir`, `zettlr_backup_dir`, `zettlr_config_src`, `zettlr_restore_prefs`, `zettlr_prefs_path`, `zettlr_prefs_src`, `zettlr_config_items` | Configure Zettlr backup/restore paths and which items are managed. |
+
+## Notes
+
+- `mas_apps` is defined in `vars/vars.yml` but is currently unused.
 
 ## Tests
 
