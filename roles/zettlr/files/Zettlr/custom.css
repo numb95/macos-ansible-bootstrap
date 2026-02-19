@@ -1,0 +1,230 @@
+/* Enter your custom CSS here */
+
+/* =========================================================
+   Zettlr 4.1.1 (CodeMirror 6) — Dracula-ish (your palette)
+   ========================================================= */
+
+:root{
+  --bg:#282A36;
+  --fg:#F8F8F2;
+
+  --selection:#44475A;
+  --current-line:#6272A4;
+
+  --comment:#6272A4;
+
+  --red:#FF5555;
+  --orange:#FFB86C;
+  --yellow:#F1FA8C;
+  --green:#50FA7B;
+  --cyan:#8BE9FD;
+  --purple:#BD93F9;
+  --pink:#FF79C6;
+
+  --muted: rgba(248,248,242,.72);
+  --muted2: rgba(248,248,242,.55);
+  --border: rgba(98,114,164,.35);
+  --panel: rgba(40,42,54,.98);
+  --panel2: rgba(68,71,90,.25);
+}
+
+/* ---------- Global surfaces (best effort) ---------- */
+html, body,
+#app, .app, .window, .main, .workspace,
+.editor, .editor-container, .editor-wrapper,
+.markdown-editor, .markdown-body{
+  background: var(--bg) !important;
+  color: var(--fg) !important;
+}
+
+/* Sidebar/panels */
+.sidebar, .panel, .toolbar, .statusbar, .status-bar {
+  background: var(--panel) !important;
+  color: var(--fg) !important;
+  border-color: var(--border) !important;
+}
+hr, .divider, .splitter, .separator{
+  border-color: var(--border) !important;
+}
+
+/* Links */
+a{ color: var(--cyan) !important; text-decoration-color: rgba(139,233,253,.55) !important; }
+a:hover{ color: var(--pink) !important; }
+
+/* Selection (general + CM) */
+::selection{ background: var(--selection) !important; color: var(--fg) !important; }
+
+/* ---------- CodeMirror 6 core ---------- */
+.cm-editor{
+  background: var(--bg) !important;
+  color: var(--fg) !important;
+}
+
+/* Content text */
+.cm-content{
+  color: var(--fg) !important;
+  caret-color: var(--fg) !important;
+}
+
+/* Gutters (line numbers) */
+.cm-gutters{
+  background: var(--bg) !important;
+  color: var(--muted2) !important;
+  border-right: 1px solid var(--border) !important;
+}
+.cm-lineNumbers .cm-gutterElement{
+  color: var(--muted2) !important;
+}
+
+/* Active line + active gutter line number */
+.cm-activeLine{
+  background: rgba(98,114,164,.18) !important;
+}
+.cm-activeLineGutter{
+  background: rgba(98,114,164,.18) !important;
+  color: var(--fg) !important;
+}
+
+/* CM6 selection */
+.cm-selectionBackground{
+  background: var(--selection) !important;
+}
+.cm-focused .cm-selectionBackground{
+  background: var(--selection) !important;
+}
+
+/* Matching brackets */
+.cm-matchingBracket{
+  background: rgba(139,233,253,.18) !important;
+  outline: 1px solid rgba(139,233,253,.35) !important;
+}
+.cm-nonmatchingBracket{
+  background: rgba(255,85,85,.18) !important;
+  outline: 1px solid rgba(255,85,85,.35) !important;
+}
+
+/* Search matches (CM6) */
+.cm-searchMatch{
+  background: rgba(241,250,140,.22) !important;
+  outline: 1px solid rgba(241,250,140,.35) !important;
+}
+.cm-searchMatch.cm-searchMatch-selected{
+  background: rgba(255,121,198,.22) !important;
+  outline: 1px solid rgba(255,121,198,.35) !important;
+}
+
+/* Fold/placeholder widgets */
+.cm-placeholder{
+  color: var(--comment) !important;
+  opacity: .9;
+}
+
+/* Panels / tooltips (completion, hover) */
+.cm-tooltip, .cm-tooltip-autocomplete, .cm-tooltip-hover{
+  background: rgba(40,42,54,.98) !important;
+  color: var(--fg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+.cm-tooltip-autocomplete ul li[aria-selected="true"]{
+  background: rgba(68,71,90,.55) !important;
+}
+
+/* ---------- CM6 token colors ---------- */
+/* Comments */
+.cm-comment{ color: var(--comment) !important; font-style: italic; }
+
+/* Strings */
+.cm-string, .cm-string2{ color: var(--green) !important; }
+
+/* Numbers / constants / booleans / atoms */
+.cm-number, .cm-bool, .cm-atom{ color: var(--orange) !important; }
+
+/* Keywords */
+.cm-keyword{ color: var(--pink) !important; }
+
+/* Function/method names */
+.cm-def, .cm-function{ color: var(--yellow) !important; }
+
+/* Variables / properties */
+.cm-variableName, .cm-propertyName{ color: var(--purple) !important; }
+
+/* Types / class names */
+.cm-typeName, .cm-className{ color: var(--purple) !important; }
+
+/* Tags / attributes (if editing HTML/MD) */
+.cm-tagName{ color: var(--pink) !important; }
+.cm-attributeName{ color: var(--cyan) !important; }
+
+/* Operators / punctuation */
+.cm-operator, .cm-punctuation{ color: var(--fg) !important; opacity: .92; }
+
+/* Regex */
+.cm-regexp{ color: var(--cyan) !important; }
+
+/* Errors/invalid */
+.cm-invalidchar, .cm-error{ color: var(--red) !important; }
+
+/* ---------- Markdown-ish typography inside editor ---------- */
+.cm-content strong{ color: var(--fg) !important; }
+.cm-content em{ color: var(--fg) !important; opacity: .95; }
+
+/* Headings (best effort; depends on Zettlr's markdown parser classes) */
+.cm-content .tok-heading,
+.cm-content .cm-header,
+.cm-content .cm-heading{
+  color: var(--yellow) !important;
+}
+
+/* Inline code / code spans (best effort) */
+.cm-content .tok-monospace,
+.cm-content .cm-inline-code{
+  color: var(--green) !important;
+  background: rgba(68,71,90,.55) !important;
+  border: 1px solid rgba(98,114,164,.35) !important;
+  border-radius: 6px;
+  padding: 0 .25em;
+}
+
+/* Blockquotes (best effort) */
+.cm-content .tok-quote,
+.cm-content .cm-quote{
+  color: var(--muted) !important;
+}
+
+/* ---------- Inputs/buttons (if your UI uses standard elements) ---------- */
+button, .btn, .button{
+  background: rgba(68,71,90,.55) !important;
+  color: var(--fg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 10px;
+}
+button:hover, .btn:hover, .button:hover{
+  border-color: rgba(189,147,249,.55) !important;
+}
+button:disabled, .disabled{
+  color: var(--muted2) !important;
+  opacity: .7;
+}
+input, textarea, select{
+  background: rgba(68,71,90,.45) !important;
+  color: var(--fg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 10px;
+}
+input:focus, textarea:focus, select:focus{
+  outline: none !important;
+  border-color: rgba(139,233,253,.70) !important;
+  box-shadow: 0 0 0 2px rgba(139,233,253,.18) !important;
+}
+
+/* ---------- Scrollbars (WebKit/Electron) ---------- */
+*::-webkit-scrollbar{ width:12px; height:12px; }
+*::-webkit-scrollbar-track{ background: rgba(40,42,54,.85) !important; }
+*::-webkit-scrollbar-thumb{
+  background: rgba(98,114,164,.45) !important;
+  border: 2px solid rgba(40,42,54,.85) !important;
+  border-radius: 12px;
+}
+*::-webkit-scrollbar-thumb:hover{ background: rgba(189,147,249,.55) !important; }

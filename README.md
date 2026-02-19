@@ -71,7 +71,7 @@ These lists drive the `homebrew` role installs.
 ## Playbook
 
 - `playbooks/site.yml`: full run
-- Tags: `common`, `homebrew`, `dock`, `shell`, `tmux`, `update`, `dotfiles`
+- Tags: `common`, `homebrew`, `dock`, `shell`, `tmux`, `zettlr`, `update`, `dotfiles`
 
 Examples:
 
@@ -87,6 +87,10 @@ ansible-playbook playbooks/site.yml --tags shell
 
 # Tmux only (TPM + config)
 ansible-playbook playbooks/site.yml --tags tmux
+
+# Zettlr only (backup/restore)
+ansible-playbook playbooks/site.yml --tags zettlr -e backup=true
+ansible-playbook playbooks/site.yml --tags zettlr -e restore=true
 
 # Update only (brew, env managers, oh-my-zsh, tmux plugins)
 ansible-playbook playbooks/site.yml --tags update
@@ -120,6 +124,29 @@ What it installs/configures:
 - TPM in `~/.tmux/plugins/tpm`
 - Dracula custom weather script at `~/.tmux/plugins/tmux/scripts/wttr.sh`
 - plugin install/update via TPM (runs inside tmux)
+
+## Zettlr role details
+
+Config directory:
+- `~/Library/Application Support/Zettlr`
+
+Backups (only these items):
+- `stats.json`
+- `config.json`
+- `custom.css`
+- `tags.json`
+- `targets.json`
+- `user.dic`
+- `defaults/`
+- `snippets/`
+- `lua-filter/`
+
+Backup behavior:
+- Dated backup at `~/backup/zettlr/<timestamp>/`
+- Role template backup at `roles/zettlr/files/Zettlr/`
+
+Restore behavior:
+- Restores from `roles/zettlr/files/Zettlr/` into `~/Library/Application Support/Zettlr`
 
 ## Tooling role details
 
@@ -198,6 +225,16 @@ Shell init is only injected when the corresponding `enable_*` flag is true.
 ```sh
 make test
 ```
+
+## Secret Scanning
+
+Local (pre-commit):
+1. Install pre-commit (example: `pip install pre-commit`)
+2. Install hooks: `pre-commit install`
+3. Run manually: `pre-commit run --all-files`
+
+CI:
+- GitHub Actions workflow `Secret Scan` runs gitleaks on pushes and pull requests.
 
 This runs the playbook in check mode using `vars/vars-tests.yml`.
 

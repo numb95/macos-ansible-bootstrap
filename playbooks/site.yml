@@ -15,6 +15,8 @@
       tags: [shell]
     - role: tmux
       tags: [tmux]
+    - role: zettlr
+      tags: [zettlr]
     - role: update
       tags: [update]
     - role: tooling

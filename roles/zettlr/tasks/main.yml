@@ -1,0 +1,198 @@
+---
+- name: Set Zettlr role flags from extra vars
+  ansible.builtin.set_fact:
+    zettlr_backup_enabled: "{{ backup | default(false) | bool }}"
+    zettlr_restore_enabled: "{{ restore | default(false) | bool }}"
+  tags:
+    - zettlr
+
+- name: Ensure Zettlr backup directory exists
+  ansible.builtin.file:
+    path: "{{ zettlr_backup_dir }}"
+    state: directory
+    mode: "0700"
+  when: zettlr_backup_enabled
+  tags:
+    - zettlr
+
+- name: Ensure Zettlr config directory exists
+  ansible.builtin.stat:
+    path: "{{ zettlr_config_dir }}"
+  register: zettlr_config_dir_stat
+  tags:
+    - zettlr
+
+- name: Check Zettlr prefs file
+  ansible.builtin.stat:
+    path: "{{ zettlr_prefs_path }}"
+  register: zettlr_prefs_stat
+  when:
+    - zettlr_backup_enabled
+    - zettlr_prefs_path | length > 0
+  tags:
+    - zettlr
+
+- name: Backup Zettlr prefs file
+  ansible.builtin.copy:
+    src: "{{ zettlr_prefs_path }}"
+    dest: "{{ zettlr_backup_dir }}/{{ zettlr_prefs_path | basename }}"
+    remote_src: true
+    mode: "0600"
+  when:
+    - zettlr_backup_enabled
+    - zettlr_prefs_path | length > 0
+    - zettlr_prefs_stat.stat.exists
+  tags:
+    - zettlr
+
+- name: Ensure role files directory exists for Zettlr backup
+  ansible.builtin.file:
+    path: "{{ role_path }}/files/{{ zettlr_config_src }}"
+    state: directory
+    mode: "0700"
+  delegate_to: localhost
+  run_once: true
+  when:
+    - zettlr_backup_enabled
+    - zettlr_config_src | length > 0
+  tags:
+    - zettlr
+
+- name: Check Zettlr items for role backup
+  ansible.builtin.stat:
+    path: "{{ zettlr_config_dir }}/{{ item.name }}"
+  register: zettlr_item_stats
+  when:
+    - zettlr_backup_enabled
+    - zettlr_config_dir_stat.stat.exists
+  loop: "{{ zettlr_config_items }}"
+  tags:
+    - zettlr
+
+- name: Backup Zettlr items into dated backup directory
+  ansible.builtin.copy:
+    src: "{{ zettlr_config_dir }}/{{ item.item.name }}"
+    dest: "{{ zettlr_backup_dir }}/{{ item.item.name }}"
+    remote_src: true
+    mode: "{{ '0700' if item.item.type == 'dir' else '0600' }}"
+  when:
+    - zettlr_backup_enabled
+    - item.stat.exists
+  loop: "{{ zettlr_item_stats.results }}"
+  tags:
+    - zettlr
+
+- name: Backup Zettlr files into role files directory
+  ansible.builtin.fetch:
+    src: "{{ zettlr_config_dir }}/{{ item.item.name }}"
+    dest: "{{ role_path }}/files/{{ zettlr_config_src }}/"
+    flat: true
+  delegate_to: localhost
+  run_once: true
+  when:
+    - zettlr_backup_enabled
+    - item.stat.exists
+    - item.item.type == "file"
+  loop: "{{ zettlr_item_stats.results }}"
+  tags:
+    - zettlr
+
+- name: Backup Zettlr directories into role files directory
+  ansible.builtin.synchronize:
+    src: "{{ zettlr_config_dir }}/{{ item.item.name }}/"
+    dest: "{{ role_path }}/files/{{ zettlr_config_src }}/{{ item.item.name }}/"
+    mode: pull
+    archive: true
+  delegate_to: localhost
+  run_once: true
+  when:
+    - zettlr_backup_enabled
+    - item.stat.exists
+    - item.item.type == "dir"
+  loop: "{{ zettlr_item_stats.results }}"
+  tags:
+    - zettlr
+
+- name: Check role Zettlr config source
+  ansible.builtin.stat:
+    path: "{{ role_path }}/files/{{ zettlr_config_src }}"
+  register: zettlr_role_config_stat
+  delegate_to: localhost
+  run_once: true
+  when:
+    - zettlr_restore_enabled
+    - zettlr_config_src | length > 0
+  tags:
+    - zettlr
+
+- name: Ensure Zettlr config directory exists for restore
+  ansible.builtin.file:
+    path: "{{ zettlr_config_dir }}"
+    state: directory
+    mode: "0700"
+  when:
+    - zettlr_restore_enabled
+    - zettlr_config_src | length > 0
+    - zettlr_role_config_stat.stat.exists
+  tags:
+    - zettlr
+
+- name: Restore Zettlr items from role files
+  ansible.builtin.copy:
+    src: "{{ zettlr_config_src }}/{{ item.name }}"
+    dest: "{{ zettlr_config_dir }}/{{ item.name }}"
+    mode: "{{ '0700' if item.type == 'dir' else '0600' }}"
+  when:
+    - zettlr_restore_enabled
+    - zettlr_config_src | length > 0
+    - zettlr_role_config_stat.stat.exists
+  loop: "{{ zettlr_config_items }}"
+  tags:
+    - zettlr
+
+- name: Check role Zettlr prefs source
+  ansible.builtin.stat:
+    path: "{{ role_path }}/files/{{ zettlr_prefs_src }}"
+  register: zettlr_role_prefs_stat
+  delegate_to: localhost
+  run_once: true
+  when:
+    - zettlr_restore_enabled
+    - zettlr_prefs_src | length > 0
+  tags:
+    - zettlr
+
+- name: Restore Zettlr prefs file from role files
+  ansible.builtin.copy:
+    src: "{{ zettlr_prefs_src }}"
+    dest: "{{ zettlr_prefs_path }}"
+    mode: "0600"
+  when:
+    - zettlr_restore_enabled
+    - zettlr_prefs_path | length > 0
+    - zettlr_prefs_src | length > 0
+    - zettlr_role_prefs_stat.stat.exists
+  tags:
+    - zettlr
+
+- name: Warn when no Zettlr config source exists
+  ansible.builtin.debug:
+    msg: "No Zettlr config source found at {{ role_path }}/files/{{ zettlr_config_src }}. Skipping restore."
+  when:
+    - zettlr_restore_enabled
+    - zettlr_config_src | length > 0
+    - zettlr_role_config_stat is defined
+    - not zettlr_role_config_stat.stat.exists
+  tags:
+    - zettlr
+
+- name: Warn when no Zettlr prefs source exists
+  ansible.builtin.debug:
+    msg: "No Zettlr prefs source found at {{ role_path }}/files/{{ zettlr_prefs_src }}. Skipping prefs restore."
+  when:
+    - zettlr_restore_enabled
+    - zettlr_prefs_src | length > 0
+    - zettlr_role_prefs_stat is defined
+    - not zettlr_role_prefs_stat.stat.exists
+  tags:
+    - zettlr
