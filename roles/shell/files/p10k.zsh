@@ -118,6 +118,9 @@
 
   # Defines character set used by powerlevel10k. It's best to let `p10k configure` set it for you.
   typeset -g POWERLEVEL9K_MODE=nerdfont-complete
+
+  # Color reference: 256-color palette chart (run in zsh).
+  # for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
   # When set to `moderate`, some icons will have an extra space after them. This is meant to avoid
   # icon overlap when using non-monospace fonts. When set to `none`, spaces are not added.
   typeset -g POWERLEVEL9K_ICON_PADDING=none
@@ -187,7 +190,7 @@
   #################################[ os_icon: os identifier ]##################################
   # OS identifier color.
   typeset -g POWERLEVEL9K_OS_ICON_FOREGROUND=232
-  typeset -g POWERLEVEL9K_OS_ICON_BACKGROUND=7
+  typeset -g POWERLEVEL9K_OS_ICON_BACKGROUND=244
   # Custom icon.
   # typeset -g POWERLEVEL9K_OS_ICON_CONTENT_EXPANSION='⭐'
 
@@ -228,7 +231,7 @@
   typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=250
   # Color of the anchor directory segments. Anchor segments are never shortened. The first
   # segment is always an anchor.
-  typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=255
+  typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=238
   # Display anchor directory segments in bold.
   typeset -g POWERLEVEL9K_DIR_ANCHOR_BOLD=true
   # Don't shorten directories that contain any of these files. They are anchors.
@@ -1457,8 +1460,8 @@
   # Tip: Remove the next line to always show gcloud.
   # typeset -g POWERLEVEL9K_GCLOUD_SHOW_ON_COMMAND='gcloud|gcs|gsutil'
   # Google cloud color.
-  typeset -g POWERLEVEL9K_GCLOUD_FOREGROUND=208
-  typeset -g POWERLEVEL9K_GCLOUD_BACKGROUND=4
+  typeset -g POWERLEVEL9K_GCLOUD_FOREGROUND=006
+  typeset -g POWERLEVEL9K_GCLOUD_BACKGROUND=021
 
   # Google cloud format. Change the value of POWERLEVEL9K_GCLOUD_PARTIAL_CONTENT_EXPANSION and/or
   # POWERLEVEL9K_GCLOUD_COMPLETE_CONTENT_EXPANSION if the default is too verbose or not informative

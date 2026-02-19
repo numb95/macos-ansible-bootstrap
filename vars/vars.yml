@@ -290,4 +290,6 @@ homebrew_casks:
   - syncthing-app
   # Open-source markdown editor
   - zettlr
+  # Hack Nerd Font (Hack)
+  - font-hack-nerd-font
 mas_apps: []

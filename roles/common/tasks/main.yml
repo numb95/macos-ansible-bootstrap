@@ -1,6 +1,0 @@
----
-- name: Ensure prerequisites are present
-  ansible.builtin.debug:
-    msg: "Common prerequisites placeholder"
-  tags:
-    - common

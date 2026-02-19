@@ -1,0 +1,14 @@
+---
+# iTerm2 config paths
+iterm_prefs_path: "{{ macos_home }}/Library/Preferences/com.googlecode.iterm2.plist"
+
+# Backup paths
+iterm_backup_base_dir: "{{ macos_home }}/backup/iterm"
+iterm_backup_dir: "{{ iterm_backup_base_dir }}/{{ ansible_facts['date_time']['iso8601_basic_short'] }}"
+
+# Restore sources (relative to roles/iterm/files)
+iterm_config_src: "iTerm2"
+iterm_prefs_src: "com.googlecode.iterm2.plist"
+
+# Restart iTerm2 after restore
+iterm_restart_after_restore: false
