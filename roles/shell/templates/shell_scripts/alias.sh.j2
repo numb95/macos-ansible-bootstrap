@@ -1,11 +1,6 @@
 ## General
 alias python='python3'
 
-## Help formatting
-alias bathelp='bat --plain --language=help'
-alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
-alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
-
 ## Tools
 {% if enable_aws %}
 if command -v awsp >/dev/null 2>&1 || [ -f "$HOME/.awsp" ] || command -v _awsp >/dev/null 2>&1; then

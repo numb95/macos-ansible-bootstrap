@@ -1,0 +1,145 @@
+---
+- name: Set iTerm role flags from extra vars
+  ansible.builtin.set_fact:
+    iterm_backup_enabled: "{{ backup | default(false) | bool }}"
+    iterm_restore_enabled: "{{ restore | default(false) | bool }}"
+  tags:
+    - iterm
+
+- name: Ensure iTerm backup directory exists
+  ansible.builtin.file:
+    path: "{{ iterm_backup_dir }}"
+    state: directory
+    mode: "0700"
+  when: iterm_backup_enabled
+  tags:
+    - iterm
+
+- name: Check iTerm prefs file
+  ansible.builtin.stat:
+    path: "{{ iterm_prefs_path }}"
+  register: iterm_prefs_stat
+  when: iterm_prefs_path | length > 0
+  tags:
+    - iterm
+
+
+- name: Backup iTerm prefs file
+  ansible.builtin.copy:
+    src: "{{ iterm_prefs_path }}"
+    dest: "{{ iterm_backup_dir }}/{{ iterm_prefs_path | basename }}"
+    remote_src: true
+    mode: "0600"
+  when:
+    - iterm_backup_enabled
+    - iterm_prefs_path | length > 0
+    - iterm_prefs_stat.stat.exists
+  tags:
+    - iterm
+
+- name: Ensure role files directory exists for iTerm backup
+  ansible.builtin.file:
+    path: "{{ role_path }}/files/{{ iterm_config_src }}"
+    state: directory
+    mode: "0700"
+  delegate_to: localhost
+  run_once: true
+  when:
+    - iterm_backup_enabled
+    - iterm_config_src | length > 0
+  tags:
+    - iterm
+
+- name: Backup iTerm prefs into role files directory
+  ansible.builtin.fetch:
+    src: "{{ iterm_prefs_path }}"
+    dest: "{{ role_path }}/files/{{ iterm_prefs_src }}"
+    flat: true
+  delegate_to: localhost
+  run_once: true
+  when:
+    - iterm_backup_enabled
+    - iterm_prefs_src | length > 0
+    - iterm_prefs_stat.stat.exists
+  tags:
+    - iterm
+
+- name: Check role iTerm config source
+  ansible.builtin.stat:
+    path: "{{ role_path }}/files/{{ iterm_config_src }}"
+  register: iterm_role_config_stat
+  delegate_to: localhost
+  run_once: true
+  when:
+    - iterm_restore_enabled
+    - iterm_config_src | length > 0
+  tags:
+    - iterm
+
+- name: Check role iTerm prefs source
+  ansible.builtin.stat:
+    path: "{{ role_path }}/files/{{ iterm_prefs_src }}"
+  register: iterm_role_prefs_stat
+  delegate_to: localhost
+  run_once: true
+  when:
+    - iterm_restore_enabled
+    - iterm_prefs_src | length > 0
+  tags:
+    - iterm
+
+- name: Restore iTerm prefs file from role files
+  ansible.builtin.copy:
+    src: "{{ iterm_prefs_src }}"
+    dest: "{{ iterm_prefs_path }}"
+    mode: "0600"
+  when:
+    - iterm_restore_enabled
+    - iterm_prefs_path | length > 0
+    - iterm_prefs_src | length > 0
+    - iterm_role_prefs_stat.stat.exists
+  tags:
+    - iterm
+
+- name: Warn when no iTerm config source exists
+  ansible.builtin.debug:
+    msg: "No iTerm config source found at {{ role_path }}/files/{{ iterm_config_src }}. Skipping restore."
+  when:
+    - iterm_restore_enabled
+    - iterm_config_src | length > 0
+    - iterm_role_config_stat is defined
+    - not iterm_role_config_stat.stat.exists
+  tags:
+    - iterm
+
+- name: Warn when no iTerm prefs source exists
+  ansible.builtin.debug:
+    msg: "No iTerm prefs source found at {{ role_path }}/files/{{ iterm_prefs_src }}. Skipping prefs restore."
+  when:
+    - iterm_restore_enabled
+    - iterm_prefs_src | length > 0
+    - iterm_role_prefs_stat is defined
+    - not iterm_role_prefs_stat.stat.exists
+  tags:
+    - iterm
+
+- name: Quit iTerm2 to reload preferences
+  ansible.builtin.command: osascript -e 'tell application "iTerm" to quit'
+  changed_when: false
+  failed_when: false
+  when:
+    - iterm_restore_enabled
+    - iterm_restart_after_restore | bool
+  tags:
+    - iterm
+
+- name: Start iTerm2 after restore
+  ansible.builtin.shell: |
+    open -a "iTerm" || open -a "iTerm2"
+  changed_when: false
+  failed_when: false
+  when:
+    - iterm_restore_enabled
+    - iterm_restart_after_restore | bool
+  tags:
+    - iterm

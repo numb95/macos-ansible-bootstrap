@@ -1,6 +1,0 @@
----
-- name: Install dotfiles (placeholder)
-  ansible.builtin.debug:
-    msg: "Dotfiles placeholder"
-  tags:
-    - dotfiles

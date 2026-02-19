@@ -42,10 +42,6 @@ function zsh_directory_name() {
   return 1
 }
 
-## Utilities
-function help() {
-  "$@" --help 2>&1 | bathelp
-}
 function ia-save() {
   curl -s -I https://web.archive.org/save/$* | grep Content-Location | awk '{print "https://web.archive.org"$2}'
 }

@@ -5,8 +5,6 @@
   vars_files:
     - ../vars/vars.yml
   roles:
-    - role: common
-      tags: [common]
     - role: homebrew
       tags: [homebrew]
     - role: dock
@@ -21,5 +19,5 @@
       tags: [update]
     - role: tooling
       tags: [tooling]
-    - role: dotfiles
-      tags: [dotfiles]
+    - role: iterm
+      tags: [iterm]

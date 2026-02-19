@@ -71,7 +71,7 @@ These lists drive the `homebrew` role installs.
 ## Playbook
 
 - `playbooks/site.yml`: full run
-- Tags: `common`, `homebrew`, `dock`, `shell`, `tmux`, `zettlr`, `update`, `dotfiles`
+- Tags: `homebrew`, `dock`, `shell`, `tmux`, `iterm`, `zettlr`, `update`
 
 Examples:
 
@@ -87,6 +87,10 @@ ansible-playbook playbooks/site.yml --tags shell
 
 # Tmux only (TPM + config)
 ansible-playbook playbooks/site.yml --tags tmux
+
+# iTerm2 only (backup/restore)
+ansible-playbook playbooks/site.yml --tags iterm -e backup=true
+ansible-playbook playbooks/site.yml --tags iterm -e restore=true
 
 # Zettlr only (backup/restore)
 ansible-playbook playbooks/site.yml --tags zettlr -e backup=true
@@ -112,6 +116,11 @@ What it installs/configures:
 - shell script fragments under `~/.shell_scripts`
 - env managers (per `enable_*` flags)
 
+Powerlevel10k color reference (256-color palette):
+```sh
+for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
+```
+
 ## Tmux role details
 
 Backups:
@@ -124,6 +133,19 @@ What it installs/configures:
 - TPM in `~/.tmux/plugins/tpm`
 - Dracula custom weather script at `~/.tmux/plugins/tmux/scripts/wttr.sh`
 - plugin install/update via TPM (runs inside tmux)
+
+## iTerm2 role details
+
+Config paths:
+- `~/Library/Application Support/iTerm2`
+- `~/Library/Preferences/com.googlecode.iterm2.plist`
+
+Backup behavior:
+- Dated backup at `~/backup/iterm/<timestamp>/`
+- Role template backup at `roles/iterm/files/iTerm2/` and `roles/iterm/files/com.googlecode.iterm2.plist`
+
+Restore behavior:
+- Restores config directory and plist from role files into the paths above
 
 ## Zettlr role details
 
@@ -164,21 +186,11 @@ What it installs/configures:
 - Packages from `homebrew_packages`
 - Casks from `homebrew_casks`
 
-## Common role details
-
-What it installs/configures:
-- Placeholder role for shared prerequisites (currently only logs a message)
-
 ## Dock role details
 
 What it installs/configures:
 - Dock autohide, size, magnification, position, and recents
 - Hot corners and Dock persistent apps (from `vars/vars.yml`)
-
-## Dotfiles role details
-
-What it installs/configures:
-- Placeholder role (no real dotfile actions yet)
 
 ## Update role details
 
