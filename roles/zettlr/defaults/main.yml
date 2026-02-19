@@ -28,8 +28,6 @@ zettlr_config_items:
     type: file
   - name: user.dic
     type: file
-  - name: defaults
-    type: dir
   - name: snippets
     type: dir
   - name: lua-filter
