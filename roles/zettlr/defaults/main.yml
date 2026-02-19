@@ -1,0 +1,34 @@
+---
+# Zettlr config paths
+zettlr_config_dir: "{{ macos_home }}/Library/Application Support/Zettlr"
+
+# Backup paths
+zettlr_backup_base_dir: "{{ macos_home }}/backup/zettlr"
+zettlr_backup_dir: "{{ zettlr_backup_base_dir }}/{{ ansible_facts['date_time']['iso8601_basic_short'] }}"
+
+# Restore sources (relative to roles/zettlr/files)
+zettlr_config_src: "Zettlr"
+
+# Optional preferences file restore
+zettlr_restore_prefs: false
+zettlr_prefs_path: ""
+zettlr_prefs_src: ""
+
+# Zettlr items to backup/restore
+zettlr_config_items:
+  - name: stats.json
+    type: file
+  - name: config.json
+    type: file
+  - name: custom.css
+    type: file
+  - name: tags.json
+    type: file
+  - name: targets.json
+    type: file
+  - name: user.dic
+    type: file
+  - name: snippets
+    type: dir
+  - name: lua-filter
+    type: dir

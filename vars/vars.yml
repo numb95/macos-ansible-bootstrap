@@ -205,9 +205,17 @@ homebrew_packages:
   - yq
   # Fish shell like syntax highlighting for zsh
   - zsh-syntax-highlighting
+  # Gobuffalo
   - gobuffalo/tap/buffalo
+  # Official Amazon AWS command-line interface
   - awscli
+  # GitHub command-line tool
   - gh
+  # Monitor a directory for changes and run a shell command
+  - fswatch
+  # Framework for managing multi-language pre-commit hooks
+  - pre-commit
+
 homebrew_casks:
   # Distribution of the Python and R programming languages for scientific computing
   - anaconda
@@ -280,4 +288,6 @@ homebrew_casks:
   - rancher
   # Real time file synchronisation software
   - syncthing-app
+  # Open-source markdown editor
+  - zettlr
 mas_apps: []

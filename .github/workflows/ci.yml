@@ -79,7 +79,7 @@ jobs:
         env:
           ANSIBLE_COLLECTIONS_PATH: collections
           ANSIBLE_CONFIG: ansible.cfg
-        run: ansible-lint --format=pep8
+        run: ansible-lint --format=pep8 -c .ansible-lint
 
   tests:
     runs-on: ubuntu-latest
