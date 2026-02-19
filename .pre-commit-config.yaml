@@ -4,3 +4,11 @@ repos:
     hooks:
       - id: gitleaks
         args: ["--verbose", "--redact", "--no-banner"]
+  - repo: https://github.com/ansible/ansible-lint
+    rev: v26.1.1
+    hooks:
+      - id: ansible-lint
+        args: ["-c", ".ansible-lint"]
+        language_version: python3.14
+        additional_dependencies:
+          - ansible-core==2.20.2

@@ -98,7 +98,7 @@
     - zettlr
 
 - name: Backup Zettlr directories into role files directory
-  ansible.builtin.synchronize:
+  ansible.posix.synchronize:
     src: "{{ zettlr_config_dir }}/{{ item.item.name }}/"
     dest: "{{ role_path }}/files/{{ zettlr_config_src }}/{{ item.item.name }}/"
     mode: pull

@@ -210,9 +210,12 @@ homebrew_packages:
   # Official Amazon AWS command-line interface
   - awscli
   # GitHub command-line tool
-  - gh 
+  - gh
   # Monitor a directory for changes and run a shell command
   - fswatch
+  # Framework for managing multi-language pre-commit hooks
+  - pre-commit
+
 homebrew_casks:
   # Distribution of the Python and R programming languages for scientific computing
   - anaconda
